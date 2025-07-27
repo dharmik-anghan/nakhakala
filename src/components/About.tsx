@@ -289,7 +289,7 @@ const About: React.FC = () => {
             <StoryText variants={itemVariants}>
               Each design is <HighlightText>meticulously crafted</HighlightText> using premium 
               materials and innovative techniques. We believe that nail art is not just a 
-              servic, it's a <HighlightText>personalized luxury experience</HighlightText> that 
+              service, it's a <HighlightText>personalized luxury experience</HighlightText> that 
               reflects your unique style and personality.
             </StoryText>
 
