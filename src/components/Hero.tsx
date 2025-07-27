@@ -300,7 +300,7 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             <HeroImage
-              src="public/image.jpeg"
+              src="/image.jpeg"
               alt="Premium Nail Art"
               loading="eager"
             />
