@@ -1,3 +1,13 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Disallow: /_netlify/
+Disallow: /.well-known/
+
+# Sitemap location
+Sitemap: https://nakhakala.netlify.app/sitemap.xml
+
+# Crawl delay for polite crawling
+Crawl-delay: 1

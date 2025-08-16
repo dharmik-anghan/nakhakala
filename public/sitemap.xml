@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://nakhakala.netlify.app/</loc>
+    <lastmod>2024-12-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://nakhakala.netlify.app/nakhakala-logo-transparent.png</image:loc>
+      <image:title>Nakhakala - Premium Nail Artistry Logo</image:title>
+      <image:caption>Professional nail art and press-on nails brand logo</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://nakhakala.netlify.app/assets/images/gallery/elegant-french-tips.jpeg</image:loc>
+      <image:title>Elegant French Tips - Premium Nail Art</image:title>
+      <image:caption>Sophisticated French tip nail design by Nakhakala expert artists</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://nakhakala.netlify.app/assets/images/gallery/luxury-gold-accent.jpeg</image:loc>
+      <image:title>Luxury Gold Accents - Sophisticated Nail Design</image:title>
+      <image:caption>Premium gold accent nail art for luxury nail styling</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://nakhakala.netlify.app/assets/images/gallery/artistic-floral-design.jpeg</image:loc>
+      <image:title>Artistic Floral Design - Hand-painted Nail Art</image:title>
+      <image:caption>Custom hand-painted floral nail art designs</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://nakhakala.netlify.app/assets/images/gallery/modern-geometric-pattern.jpeg</image:loc>
+      <image:title>Modern Geometric Pattern - Contemporary Nail Style</image:title>
+      <image:caption>Trendy geometric nail art patterns for modern style</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://nakhakala.netlify.app/assets/images/gallery/classic-nude-elegance.jpeg</image:loc>
+      <image:title>Classic Nude Elegance - Timeless Nail Beauty</image:title>
+      <image:caption>Elegant nude nail designs for timeless sophistication</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://nakhakala.netlify.app/assets/images/gallery/bold-statement-nails.jpeg</image:loc>
+      <image:title>Bold Statement Nails - Eye-catching Design</image:title>
+      <image:caption>Bold and dramatic nail art for statement-making style</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://nakhakala.netlify.app/assets/images/gallery/glamorous-sparkle.jpeg</image:loc>
+      <image:title>Glamorous Sparkle - Dazzling Nail Finish</image:title>
+      <image:caption>Sparkling and glamorous nail art for special occasions</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://nakhakala.netlify.app/assets/images/gallery/premium-ombre-design.jpeg</image:loc>
+      <image:title>Premium Ombré Design - Professional Blending</image:title>
+      <image:caption>Professional ombré nail art with seamless color blending</image:caption>
+    </image:image>
+  </url>
+  
+</urlset>
