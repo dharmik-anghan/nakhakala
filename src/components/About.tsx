@@ -5,7 +5,7 @@ import { Section, Container } from '../styles/GlobalStyles';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const AboutSection = styled(Section)`
-  background: ${({ theme }) => theme.colors.gradients.luxury};
+  background: ${({ theme }) => theme.colors.primary.black};
   position: relative;
   overflow: hidden;
   color: ${({ theme }) => theme.colors.primary.white};
@@ -17,7 +17,8 @@ const AboutSection = styled(Section)`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.1) 50%, transparent 100%);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(212, 175, 55, 0.02) 100%);
+    opacity: 0.1;
     pointer-events: none;
   }
 `;

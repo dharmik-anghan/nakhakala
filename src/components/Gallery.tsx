@@ -1,19 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Section, Container } from '../styles/GlobalStyles';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import { 
-  galleryImages, 
-  getImagesByCategory, 
-  getImagePath, 
-  galleryCategories,
-  GalleryImage as GalleryImageData
-} from '../data/galleryData';
-import ImageWithFallback from './ImageWithFallback';
 
-const GallerySection = styled(Section)`
-  background: ${({ theme }) => theme.colors.neutrals[50]};
+const InstagramSection = styled(Section)`
+  background: ${({ theme }) => theme.colors.gradients.soft};
   position: relative;
   overflow: hidden;
 
@@ -24,39 +16,41 @@ const GallerySection = styled(Section)`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.03) 50%, transparent 100%);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(212, 175, 55, 0.02) 100%);
     pointer-events: none;
   }
 `;
 
-const GalleryContainer = styled(Container)`
+const InstagramContainer = styled(Container)`
   position: relative;
   z-index: 1;
 `;
 
 const SectionHeader = styled(motion.div)`
   text-align: center;
-  max-width: 600px;
-  margin: 0 auto ${({ theme }) => theme.spacing[16]};
+  max-width: 700px;
+  margin: 0 auto ${({ theme }) => theme.spacing[12]};
 `;
 
 const SectionTitle = styled(motion.h2)`
   font-size: ${({ theme }) => theme.typography.sizes['4xl']};
   font-weight: ${({ theme }) => theme.typography.weights.bold};
   color: ${({ theme }) => theme.colors.primary.black};
-  margin-bottom: ${({ theme }) => theme.spacing[4]};
+  margin-bottom: ${({ theme }) => theme.spacing[6]};
   position: relative;
+  font-family: ${({ theme }) => theme.typography.fonts.display};
+  letter-spacing: -0.01em;
 
   &::after {
     content: '';
     position: absolute;
-    bottom: -${({ theme }) => theme.spacing[2]};
+    bottom: -${({ theme }) => theme.spacing[3]};
     left: 50%;
     transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: ${({ theme }) => theme.colors.gradients.gold};
-    border-radius: 2px;
+    width: 80px;
+    height: 2px;
+    background: ${({ theme }) => theme.colors.gold.primary};
+    border-radius: 1px;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
@@ -71,182 +65,102 @@ const SectionSubtitle = styled(motion.p)`
   margin: 0;
 `;
 
-const FilterTabs = styled(motion.div)`
-  display: flex;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing[4]};
-  margin-bottom: ${({ theme }) => theme.spacing[12]};
-  flex-wrap: wrap;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    gap: ${({ theme }) => theme.spacing[2]};
-  }
-`;
-
-const FilterTab = styled(motion.button)<{ active?: boolean }>`
-  padding: ${({ theme }) => theme.spacing[3]} ${({ theme }) => theme.spacing[6]};
-  border: 2px solid ${({ theme, active }) => 
-    active ? theme.colors.gold.primary : theme.colors.neutrals[300]};
-  background: ${({ theme, active }) => 
-    active ? theme.colors.gold.primary : 'transparent'};
-  color: ${({ theme, active }) => 
-    active ? theme.colors.primary.white : theme.colors.neutrals[700]};
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  font-weight: ${({ theme }) => theme.typography.weights.medium};
-  cursor: pointer;
-  transition: all ${({ theme }) => theme.transitions.base};
-
-  &:hover {
-    border-color: ${({ theme }) => theme.colors.gold.primary};
-    color: ${({ theme, active }) => 
-      active ? theme.colors.primary.white : theme.colors.gold.primary};
-  }
-`;
-
-const GalleryGrid = styled(motion.div)`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: ${({ theme }) => theme.spacing[8]};
+const InstagramEmbed = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.primary.white};
+  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
+  box-shadow: ${({ theme }) => theme.shadows.lg};
+  padding: ${({ theme }) => theme.spacing[8]};
+  margin: 0 auto;
+  max-width: 600px;
+  text-align: center;
+  border: 1px solid ${({ theme }) => theme.colors.neutrals[200]};
   
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: ${({ theme }) => theme.spacing[6]};
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    grid-template-columns: 1fr;
-    gap: ${({ theme }) => theme.spacing[4]};
+    padding: ${({ theme }) => theme.spacing[6]};
+    margin: 0 ${({ theme }) => theme.spacing[4]};
   }
 `;
 
-const GalleryItem = styled(motion.div)`
-  position: relative;
-  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
-  overflow: hidden;
-  box-shadow: ${({ theme }) => theme.shadows.base};
-  cursor: pointer;
-  transition: all ${({ theme }) => theme.transitions.smooth};
+const InstagramFrame = styled.iframe`
+  width: 100%;
+  height: 600px;
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  background: ${({ theme }) => theme.colors.neutrals[50]};
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    height: 500px;
+  }
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    height: 400px;
+  }
+`;
+
+const InstagramIcon = styled(motion.div)`
+  font-size: ${({ theme }) => theme.typography.sizes['3xl']};
+  margin-bottom: ${({ theme }) => theme.spacing[4]};
+  background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+`;
+
+const FollowButton = styled(motion.a)`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => theme.spacing[4]} ${({ theme }) => theme.spacing[8]};
+  background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+  color: ${({ theme }) => theme.colors.primary.white};
+  text-decoration: none;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  font-size: ${({ theme }) => theme.typography.sizes.base};
+  font-weight: ${({ theme }) => theme.typography.weights.semibold};
+  transition: all ${({ theme }) => theme.transitions.base};
+  margin-top: ${({ theme }) => theme.spacing[6]};
+  border: 2px solid transparent;
 
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: ${({ theme }) => theme.shadows.goldHover};
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(240, 148, 51, 0.4);
   }
 `;
 
-// Removed GalleryImage styled component - now using ImageWithFallback
-
-const GalleryOverlay = styled(motion.div)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: ${({ theme }) => theme.colors.gradients.luxury};
-  opacity: 0;
+const LoadingPlaceholder = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: ${({ theme }) => theme.spacing[6]};
-  transition: all ${({ theme }) => theme.transitions.smooth};
-
-  ${GalleryItem}:hover & {
-    opacity: 0.9;
+  height: 600px;
+  color: ${({ theme }) => theme.colors.neutrals[500]};
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    height: 500px;
+  }
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    height: 400px;
   }
 `;
-
-const OverlayTitle = styled(motion.h3)`
-  color: ${({ theme }) => theme.colors.primary.white};
-  font-size: ${({ theme }) => theme.typography.sizes.xl};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  margin-bottom: ${({ theme }) => theme.spacing[2]};
-`;
-
-const OverlayDescription = styled(motion.p)`
-  color: ${({ theme }) => theme.colors.gold.champagne};
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  margin: 0;
-`;
-
-const ViewMoreButton = styled(motion.div)`
-  display: flex;
-  justify-content: center;
-  margin-top: ${({ theme }) => theme.spacing[12]};
-`;
-
-const Button = styled(motion.button)`
-  padding: ${({ theme }) => theme.spacing[4]} ${({ theme }) => theme.spacing[8]};
-  background: ${({ theme }) => theme.colors.gradients.gold};
-  color: ${({ theme }) => theme.colors.primary.white};
-  border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  font-weight: ${({ theme }) => theme.typography.weights.medium};
-  font-size: ${({ theme }) => theme.typography.sizes.base};
-  cursor: pointer;
-  box-shadow: ${({ theme }) => theme.shadows.gold};
-  transition: all ${({ theme }) => theme.transitions.base};
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: ${({ theme }) => theme.shadows.goldHover};
-  }
-`;
-
-// Modal Components
-const Modal = styled(motion.div)`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: ${({ theme }) => theme.zIndex.modal};
-  padding: ${({ theme }) => theme.spacing[4]};
-`;
-
-const ModalContent = styled(motion.div)`
-  max-width: 90vw;
-  max-height: 90vh;
-  position: relative;
-`;
-
-// Removed ModalImage styled component - now using ImageWithFallback
-
-const CloseButton = styled(motion.button)`
-  position: absolute;
-  top: -${({ theme }) => theme.spacing[12]};
-  right: 0;
-  background: ${({ theme }) => theme.colors.gold.primary};
-  color: ${({ theme }) => theme.colors.primary.white};
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  font-size: ${({ theme }) => theme.typography.sizes.lg};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-// Using GalleryImageData interface from galleryData.ts
 
 const Gallery: React.FC = () => {
   const { ref, inView } = useScrollAnimation();
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [selectedImage, setSelectedImage] = useState<GalleryImageData | null>(null);
-  const [visibleItems, setVisibleItems] = useState(6);
 
-  // Get filtered gallery items from dynamic data
-  const filteredItems = getImagesByCategory(activeFilter);
-  const displayItems = filteredItems.slice(0, visibleItems);
+  useEffect(() => {
+    // Load Instagram embed script
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = '//www.instagram.com/embed.js';
+    document.body.appendChild(script);
 
-  // Use dynamic categories from galleryData
-  const filters = galleryCategories;
+    return () => {
+      // Cleanup script on unmount
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -254,160 +168,91 @@ const Gallery: React.FC = () => {
       opacity: 1,
       transition: {
         duration: 0.6,
-        staggerChildren: 0.1
+        staggerChildren: 0.2
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.9 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      scale: 1,
       transition: {
         duration: 0.6
       }
     }
   };
 
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { 
-      opacity: 1, 
-      scale: 1,
-      transition: { duration: 0.3 }
-    },
-    exit: { 
-      opacity: 0, 
-      scale: 0.8,
-      transition: { duration: 0.2 }
-    }
-  };
-
   return (
-    <GallerySection id="gallery" ref={ref}>
-      <GalleryContainer>
+    <InstagramSection id="gallery" ref={ref}>
+      <InstagramContainer>
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
           <SectionHeader variants={itemVariants}>
-            <SectionTitle>Our Masterpiece Gallery</SectionTitle>
+            <SectionTitle>✨ Follow Our Journey</SectionTitle>
             <SectionSubtitle>
-              Discover our stunning collection of premium nail art designs, 
-              each piece crafted with meticulous attention to detail
+              Stay updated with our latest nail art creations, behind-the-scenes moments, 
+              and inspiration. Follow us on Instagram for daily doses of nail artistry.
             </SectionSubtitle>
           </SectionHeader>
 
-          <FilterTabs variants={itemVariants}>
-            {filters.map(filter => (
-              <FilterTab
-                key={filter.value}
-                active={activeFilter === filter.value}
-                onClick={() => {
-                  setActiveFilter(filter.value);
-                  setVisibleItems(6); // Reset visible items when filter changes
-                }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {filter.label}
-              </FilterTab>
-            ))}
-          </FilterTabs>
-
-          <GalleryGrid
-            variants={containerVariants}
-            layout
+          <InstagramEmbed
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
           >
-            <AnimatePresence mode="wait">
-              {displayItems.map((item, index) => (
-                <GalleryItem
-                  key={`${activeFilter}-${item.id}`}
-                  variants={itemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  transition={{ delay: index * 0.1 }}
-                  layout
-                  onClick={() => setSelectedImage(item)}
-                  whileHover={{ y: -8 }}
-                >
-                  <ImageWithFallback
-                    src={getImagePath(item.filename)}
-                    alt={item.title}
-                    title={item.title}
-                    loading="lazy"
-                  />
-                  <GalleryOverlay>
-                    <OverlayTitle
-                      initial={{ y: 20, opacity: 0 }}
-                      whileHover={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.1 }}
-                    >
-                      {item.title}
-                    </OverlayTitle>
-                    <OverlayDescription
-                      initial={{ y: 20, opacity: 0 }}
-                      whileHover={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      {item.description}
-                    </OverlayDescription>
-                  </GalleryOverlay>
-                </GalleryItem>
-              ))}
-            </AnimatePresence>
-          </GalleryGrid>
-
-          {displayItems.length < filteredItems.length && (
-            <ViewMoreButton variants={itemVariants}>
-              <Button
-                onClick={() => setVisibleItems(prev => prev + 6)}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Load More Designs
-              </Button>
-            </ViewMoreButton>
-          )}
-        </motion.div>
-      </GalleryContainer>
-
-      {/* Image Modal */}
-      <AnimatePresence>
-        {selectedImage && (
-          <Modal
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            onClick={() => setSelectedImage(null)}
-          >
-            <ModalContent
-              onClick={(e) => e.stopPropagation()}
-              variants={modalVariants}
+            <InstagramIcon variants={itemVariants}>
+              📸
+            </InstagramIcon>
+            
+            {/* Instagram Embed */}
+            <blockquote 
+              className="instagram-media" 
+              data-instgrm-permalink="https://www.instagram.com/nakhakala/" 
+              data-instgrm-version="14"
+              style={{
+                background: '#FFF',
+                border: 0,
+                borderRadius: '3px',
+                boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
+                margin: '1px',
+                maxWidth: '540px',
+                minWidth: '326px',
+                padding: 0,
+                width: 'calc(100% - 2px)'
+              }}
             >
-              <CloseButton
-                onClick={() => setSelectedImage(null)}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                ×
-              </CloseButton>
-              <ImageWithFallback
-                src={getImagePath(selectedImage.filename)}
-                alt={selectedImage.title}
-                title={selectedImage.title}
-                loading="eager"
-              />
-            </ModalContent>
-          </Modal>
-        )}
-      </AnimatePresence>
-    </GallerySection>
+              <div style={{ padding: '16px' }}>
+                <LoadingPlaceholder>
+                  <InstagramIcon>📱</InstagramIcon>
+                  <p>Loading Instagram feed...</p>
+                  <p style={{ fontSize: '0.9rem', color: '#999' }}>
+                    If this doesn't load, visit us directly on Instagram
+                  </p>
+                </LoadingPlaceholder>
+              </div>
+            </blockquote>
+
+            <FollowButton
+              href="https://instagram.com/nakhakala"
+              target="_blank"
+              rel="noopener noreferrer"
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span>📱</span>
+              Follow @nakhakala
+              <span>✨</span>
+            </FollowButton>
+          </InstagramEmbed>
+        </motion.div>
+      </InstagramContainer>
+    </InstagramSection>
   );
 };
 

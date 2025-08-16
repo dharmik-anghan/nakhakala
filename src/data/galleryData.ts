@@ -21,83 +21,83 @@ export interface GalleryImage {
 export const galleryImages: GalleryImage[] = [
   {
     id: 1,
-    filename: 'luxury-gold-collection.jpg', // Place this file in src/assets/images/gallery/
-    title: 'Luxury Gold Collection',
-    description: 'Sophisticated gold patterns with intricate detailing and premium finishes',
-    category: 'luxury',
+    filename: 'elegant-french-tips.jpeg',
+    title: 'Elegant French Tips',
+    description: 'Classic French manicure with modern precision and premium finish',
+    category: 'classic',
     featured: true,
-    tags: ['gold', 'elegant', 'sophisticated', 'premium'],
-    dateAdded: '2024-01-15'
+    tags: ['french', 'classic', 'elegant', 'timeless'],
+    dateAdded: '2025-08-16'
   },
   {
     id: 2,
-    filename: 'baroque-elegance.jpg',
-    title: 'Baroque Elegance',
-    description: 'Ornate designs inspired by classical art with rich golden accents',
-    category: 'classic',
-    featured: false,
-    tags: ['baroque', 'ornate', 'classical', 'vintage'],
-    dateAdded: '2024-01-16'
+    filename: 'luxury-gold-accent.jpeg',
+    title: 'Luxury Gold Accents',
+    description: 'Sophisticated gold foil details for special occasions',
+    category: 'luxury',
+    featured: true,
+    tags: ['gold', 'luxury', 'sophisticated', 'premium'],
+    dateAdded: '2025-08-16'
   },
   {
     id: 3,
-    filename: 'modern-minimalist.jpg',
-    title: 'Modern Minimalist',
-    description: 'Clean lines with subtle golden accents for contemporary elegance',
-    category: 'modern',
-    featured: false,
-    tags: ['minimalist', 'clean', 'contemporary', 'subtle'],
-    dateAdded: '2024-01-17'
+    filename: 'artistic-floral-design.jpeg',
+    title: 'Artistic Floral Design',
+    description: 'Hand-painted botanical art with intricate detailing',
+    category: 'artistic',
+    featured: true,
+    tags: ['floral', 'artistic', 'botanical', 'hand-painted'],
+    dateAdded: '2025-08-16'
   },
   {
     id: 4,
-    filename: 'vintage-romance.jpg',
-    title: 'Vintage Romance',
-    description: 'Timeless patterns with romantic flair and delicate details',
-    category: 'classic',
+    filename: 'modern-geometric-pattern.jpeg',
+    title: 'Modern Geometric',
+    description: 'Contemporary geometric patterns with clean lines',
+    category: 'modern',
     featured: false,
-    tags: ['vintage', 'romantic', 'delicate', 'timeless'],
-    dateAdded: '2024-01-18'
+    tags: ['geometric', 'modern', 'contemporary', 'clean'],
+    dateAdded: '2025-08-16'
   },
   {
     id: 5,
-    filename: 'champagne-dreams.jpg',
-    title: 'Champagne Dreams',
-    description: 'Soft metallic tones with dreamy textures and ethereal beauty',
-    category: 'luxury',
-    featured: true,
-    tags: ['champagne', 'metallic', 'dreamy', 'ethereal'],
-    dateAdded: '2024-01-19'
+    filename: 'classic-nude-elegance.jpeg',
+    title: 'Classic Nude Elegance',
+    description: 'Timeless nude tones perfect for everyday sophistication',
+    category: 'classic',
+    featured: false,
+    tags: ['nude', 'classic', 'elegant', 'everyday'],
+    dateAdded: '2025-08-16'
   },
   {
     id: 6,
-    filename: 'contemporary-art.jpg',
-    title: 'Contemporary Art',
-    description: 'Bold artistic expression with modern appeal and creative designs',
+    filename: 'bold-statement-nails.jpeg',
+    title: 'Bold Statement',
+    description: 'Eye-catching designs for those who love to stand out',
     category: 'artistic',
     featured: false,
-    tags: ['artistic', 'bold', 'creative', 'expression'],
-    dateAdded: '2024-01-20'
+    tags: ['bold', 'statement', 'eye-catching', 'dramatic'],
+    dateAdded: '2025-08-16'
   },
   {
     id: 7,
-    filename: 'festive-holiday.jpg',
-    title: 'Festive Holiday',
-    description: 'Seasonal designs perfect for special occasions and celebrations',
-    category: 'seasonal',
+    filename: 'glamorous-sparkle.jpeg',
+    title: 'Glamorous Sparkle',
+    description: 'Dazzling crystalline finishes for special events',
+    category: 'luxury',
     featured: false,
-    tags: ['holiday', 'festive', 'seasonal', 'celebration'],
-    dateAdded: '2024-01-21'
+    tags: ['sparkle', 'glamorous', 'crystalline', 'special'],
+    dateAdded: '2025-08-16'
   },
   {
     id: 8,
-    filename: 'crystal-elegance.jpg',
-    title: 'Crystal Elegance',
-    description: 'Crystal-inspired designs with stunning geometric patterns',
-    category: 'luxury',
-    featured: false,
-    tags: ['crystal', 'geometric', 'stunning', 'elegant'],
-    dateAdded: '2024-01-22'
+    filename: 'premium-ombre-design.jpeg',
+    title: 'Premium Ombré',
+    description: 'Seamless color transitions with professional blending',
+    category: 'artistic',
+    featured: true,
+    tags: ['ombre', 'gradient', 'blending', 'premium'],
+    dateAdded: '2025-08-16'
   }
 ];
 

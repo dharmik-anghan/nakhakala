@@ -41,10 +41,10 @@ export const theme: Theme = {
     gradients: {
       primary: 'linear-gradient(135deg, #0A0A0A 0%, #2A2A2A 100%)',
       gold: 'linear-gradient(135deg, #D4AF37 0%, #E6C76B 50%, #B8941F 100%)',
-      luxury: 'linear-gradient(135deg, #1A1A1A 0%, #D4AF37 100%)',
-      soft: 'linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%)',
-      hero: 'linear-gradient(135deg, #FFFFFF 0%, #F8F6F3 50%, #F5F5F5 100%)',
-      premium: 'linear-gradient(145deg, #0A0A0A 0%, #D4AF37 50%, #0A0A0A 100%)'
+      luxury: 'linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(212, 175, 55, 0.2) 100%)',
+      soft: 'linear-gradient(135deg, #FFFFFF 0%, #FAFAFA 100%)',
+      hero: 'linear-gradient(135deg, #FFFFFF 0%, #F8F6F3 30%, #F5F5F5 100%)',
+      premium: 'linear-gradient(135deg, #0A0A0A 0%, #D4AF37 30%, #B8941F 60%, #0A0A0A 100%)'
     }
   },
   

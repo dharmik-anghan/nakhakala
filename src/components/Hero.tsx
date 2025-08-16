@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { Section, Container, Button } from '../styles/GlobalStyles';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Section, Button } from '../styles/GlobalStyles';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const HeroSection = styled(Section)`
@@ -76,10 +76,12 @@ const TitleMain = styled(motion.span)`
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-size: 300% 300%;
-  animation: gradientShift 4s ease-in-out infinite;
+  background-size: 200% 200%;
+  animation: subtleGradientShift 6s ease-in-out infinite;
+  font-family: ${({ theme }) => theme.typography.fonts.display};
+  letter-spacing: -0.02em;
 
-  @keyframes gradientShift {
+  @keyframes subtleGradientShift {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
   }
@@ -87,25 +89,31 @@ const TitleMain = styled(motion.span)`
 
 const TitleSubtitle = styled(motion.span)`
   display: block;
-  font-size: ${({ theme }) => theme.typography.sizes['2xl']};
-  font-weight: ${({ theme }) => theme.typography.weights.medium};
-  color: ${({ theme }) => theme.colors.gold.primary};
-  margin-top: ${({ theme }) => theme.spacing[2]};
+  font-size: ${({ theme }) => theme.typography.sizes.xl};
+  font-weight: ${({ theme }) => theme.typography.weights.normal};
+  color: ${({ theme }) => theme.colors.neutrals[600]};
+  margin-top: ${({ theme }) => theme.spacing[3]};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    font-size: ${({ theme }) => theme.typography.sizes.xl};
+    font-size: 0.85rem;
   }
 `;
 
 const HeroDescription = styled(motion.p)`
   font-size: ${({ theme }) => theme.typography.sizes.lg};
   line-height: ${({ theme }) => theme.typography.lineHeights.relaxed};
-  color: ${({ theme }) => theme.colors.neutrals[600]};
-  margin-bottom: ${({ theme }) => theme.spacing[8]};
-  max-width: 500px;
+  color: ${({ theme }) => theme.colors.neutrals[700]};
+  margin-bottom: ${({ theme }) => theme.spacing[10]};
+  max-width: 480px;
+  font-weight: ${({ theme }) => theme.typography.weights.normal};
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     max-width: none;
+    text-align: center;
   }
 `;
 
@@ -136,19 +144,100 @@ const ImageWrapper = styled(motion.div)`
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.shadows.gold};
   transition: all ${({ theme }) => theme.transitions.smooth};
+  width: 100%;
+  max-width: 500px;
+  height: 400px;
 
   &:hover {
     transform: scale(1.02);
     box-shadow: ${({ theme }) => theme.shadows.goldHover};
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    height: 350px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    height: 300px;
+  }
+`;
+
+const CarouselContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: ${({ theme }) => theme.borderRadius['3xl']};
 `;
 
 const HeroImage = styled(motion.img)`
+  position: absolute;
   width: 100%;
-  height: auto;
-  max-width: 500px;
+  height: 100%;
+  object-fit: cover;
   display: block;
-  transition: all ${({ theme }) => theme.transitions.smooth};
+`;
+
+const CarouselIndicators = styled.div`
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+`;
+
+const Indicator = styled(motion.div)<{ active: boolean }>`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: ${({ active, theme }) => 
+    active ? theme.colors.gold.primary : 'rgba(255, 255, 255, 0.5)'};
+  cursor: pointer;
+  transition: all ${({ theme }) => theme.transitions.base};
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.gold.light};
+  }
+`;
+
+const CarouselControls = styled.div`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 10;
+`;
+
+const CarouselButton = styled(motion.button)`
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.primary.black};
+  font-size: 18px;
+  font-weight: bold;
+  transition: all ${({ theme }) => theme.transitions.base};
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary.white};
+    transform: scale(1.1);
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
 `;
 
 const ImageOverlay = styled(motion.div)`
@@ -193,6 +282,74 @@ const FloatingElement = styled(motion.div)<{ size: number }>`
 
 const Hero: React.FC = () => {
   const { ref, inView } = useScrollAnimation();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Array of all your nail art images
+  const heroImages = [
+    {
+      src: '/assets/images/gallery/elegant-french-tips.jpeg',
+      alt: 'Elegant French Tips - Premium nail art',
+      title: 'Elegant French Tips'
+    },
+    {
+      src: '/assets/images/gallery/luxury-gold-accent.jpeg',
+      alt: 'Luxury Gold Accents - Sophisticated nail design',
+      title: 'Luxury Gold Accents'
+    },
+    {
+      src: '/assets/images/gallery/artistic-floral-design.jpeg',
+      alt: 'Artistic Floral Design - Hand-painted nail art',
+      title: 'Artistic Floral Design'
+    },
+    {
+      src: '/assets/images/gallery/modern-geometric-pattern.jpeg',
+      alt: 'Modern Geometric Pattern - Contemporary nail style',
+      title: 'Modern Geometric'
+    },
+    {
+      src: '/assets/images/gallery/classic-nude-elegance.jpeg',
+      alt: 'Classic Nude Elegance - Timeless nail beauty',
+      title: 'Classic Nude Elegance'
+    },
+    {
+      src: '/assets/images/gallery/bold-statement-nails.jpeg',
+      alt: 'Bold Statement Nails - Eye-catching design',
+      title: 'Bold Statement'
+    },
+    {
+      src: '/assets/images/gallery/glamorous-sparkle.jpeg',
+      alt: 'Glamorous Sparkle - Dazzling nail finish',
+      title: 'Glamorous Sparkle'
+    },
+    {
+      src: '/assets/images/gallery/premium-ombre-design.jpeg',
+      alt: 'Premium Ombré Design - Professional blending',
+      title: 'Premium Ombré'
+    }
+  ];
+
+  // Auto-slide functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === heroImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 4000); // Change image every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
+
+  const goToSlide = (index: number) => {
+    setCurrentImageIndex(index);
+  };
+
+  const goToPrevious = () => {
+    setCurrentImageIndex(currentImageIndex === 0 ? heroImages.length - 1 : currentImageIndex - 1);
+  };
+
+  const goToNext = () => {
+    setCurrentImageIndex(currentImageIndex === heroImages.length - 1 ? 0 : currentImageIndex + 1);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -216,10 +373,24 @@ const Hero: React.FC = () => {
     }
   };
 
-  const scrollToFeatures = () => {
-    const element = document.getElementById('features');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const imageVariants = {
+    enter: {
+      x: 100,
+      opacity: 0
+    },
+    center: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    },
+    exit: {
+      x: -100,
+      opacity: 0,
+      transition: {
+        duration: 0.5
+      }
     }
   };
 
@@ -256,15 +427,15 @@ const Hero: React.FC = () => {
       >
         <HeroContent variants={itemVariants}>
           <HeroTitle>
+            <TitleSubtitle variants={itemVariants}>
+              Premium Nail Artistry
+            </TitleSubtitle>
             <TitleMain
               variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.01 }}
             >
               Nakhakala
             </TitleMain>
-            <TitleSubtitle variants={itemVariants}>
-              Premium Press-On Nails
-            </TitleSubtitle>
           </HeroTitle>
 
           <HeroDescription variants={itemVariants}>
@@ -276,20 +447,25 @@ const Hero: React.FC = () => {
             <Button
               variant="primary"
               as={motion.button}
-              whileHover={{ scale: 1.05, y: -2 }}
+              whileHover={{ scale: 1.03, y: -1 }}
               whileTap={{ scale: 0.98 }}
-              onClick={scrollToFeatures}
+              onClick={() => window.open('https://instagram.com/nakhakala', '_blank')}
             >
-              Explore Features
+              Book Now
             </Button>
             <Button
               variant="secondary"
               as={motion.button}
-              whileHover={{ scale: 1.05, y: -2 }}
+              whileHover={{ scale: 1.03, y: -1 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => window.open('https://instagram.com/nakhakala', '_blank')}
+              onClick={() => {
+                const element = document.getElementById('gallery');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
             >
-              Order Now
+              View Our Work
             </Button>
           </HeroButtons>
         </HeroContent>
@@ -299,20 +475,62 @@ const Hero: React.FC = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
-            <HeroImage
-              src="/image.jpeg"
-              alt="Premium Nail Art"
-              loading="eager"
-            />
-            <ImageOverlay>
-              <motion.span
-                initial={{ opacity: 0, y: 10 }}
-                whileHover={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                Luxury Craftsmanship
-              </motion.span>
-            </ImageOverlay>
+            <CarouselContainer>
+              <AnimatePresence mode="wait">
+                <HeroImage
+                  key={currentImageIndex}
+                  src={heroImages[currentImageIndex].src}
+                  alt={heroImages[currentImageIndex].alt}
+                  loading="eager"
+                  variants={imageVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                />
+              </AnimatePresence>
+              
+              {/* Carousel Controls */}
+              <CarouselControls>
+                <CarouselButton
+                  onClick={goToPrevious}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  ←
+                </CarouselButton>
+                <CarouselButton
+                  onClick={goToNext}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  →
+                </CarouselButton>
+              </CarouselControls>
+
+              {/* Carousel Indicators */}
+              <CarouselIndicators>
+                {heroImages.map((_, index) => (
+                  <Indicator
+                    key={index}
+                    active={index === currentImageIndex}
+                    onClick={() => goToSlide(index)}
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                  />
+                ))}
+              </CarouselIndicators>
+
+              <ImageOverlay>
+                <motion.span
+                  key={currentImageIndex}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  {heroImages[currentImageIndex].title}
+                </motion.span>
+              </ImageOverlay>
+            </CarouselContainer>
           </ImageWrapper>
         </HeroImageContainer>
       </HeroContainer>

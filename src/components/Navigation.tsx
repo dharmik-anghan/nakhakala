@@ -35,12 +35,17 @@ const NavContent = styled.div`
 `;
 
 const BrandName = styled(motion.h1)`
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.gold.primary};
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.primary.black};
   font-family: ${({ theme }) => theme.typography.fonts.display};
   margin: 0;
   cursor: pointer;
+  letter-spacing: -0.02em;
+  
+  &:hover {
+    color: ${({ theme }) => theme.colors.gold.primary};
+  }
 `;
 
 const DesktopNavMenu = styled.ul`
@@ -191,7 +196,7 @@ const Navigation: React.FC = () => {
   const navItems: NavItem[] = [
     { id: 'home', label: 'Home' },
     { id: 'features', label: 'Features' },
-    { id: 'gallery', label: 'Gallery' },
+    { id: 'gallery', label: 'Instagram' },
     { id: 'services', label: 'Services' },
     { id: 'about', label: 'About' },
     { id: 'contact', label: 'Contact' }
