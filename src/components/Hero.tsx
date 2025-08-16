@@ -364,6 +364,14 @@ const Hero: React.FC = () => {
     }
   ];
 
+  // Image preloading for smooth transitions
+  useEffect(() => {
+    heroImages.forEach((image) => {
+      const img = new Image();
+      img.src = image.src;
+    });
+  }, []);
+
   // Auto-slide functionality
   useEffect(() => {
     const interval = setInterval(() => {
@@ -522,6 +530,8 @@ const Hero: React.FC = () => {
                   src={heroImages[currentImageIndex].src}
                   alt={heroImages[currentImageIndex].alt}
                   loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
                   variants={imageVariants}
                   initial="enter"
                   animate="center"
