@@ -1,8 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Section, Container } from '../styles/GlobalStyles';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import OptimizedImage from './OptimizedImage';
+
+// Instagram embed window interface
+declare global {
+  interface Window {
+    instgrm?: {
+      Embeds: {
+        process: () => void;
+      };
+    };
+  }
+}
 
 const InstagramSection = styled(Section)`
   background: ${({ theme }) => theme.colors.gradients.soft};
@@ -67,33 +79,46 @@ const SectionSubtitle = styled(motion.p)`
 
 const InstagramEmbed = styled(motion.div)`
   background: ${({ theme }) => theme.colors.primary.white};
-  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
-  box-shadow: ${({ theme }) => theme.shadows.lg};
-  padding: ${({ theme }) => theme.spacing[8]};
+  border-radius: ${({ theme }) => theme.borderRadius['3xl']};
+  box-shadow: ${({ theme }) => theme.shadows.premium};
+  padding: ${({ theme }) => theme.spacing[10]};
   margin: 0 auto;
-  max-width: 600px;
+  max-width: 800px;
   text-align: center;
-  border: 1px solid ${({ theme }) => theme.colors.neutrals[200]};
+  border: 1px solid ${({ theme }) => theme.colors.gold.champagne};
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: ${({ theme }) => theme.colors.gradients.gold};
+  }
   
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    padding: ${({ theme }) => theme.spacing[6]};
+    padding: ${({ theme }) => theme.spacing[8]};
     margin: 0 ${({ theme }) => theme.spacing[4]};
+    max-width: 100%;
   }
 `;
 
 const InstagramFrame = styled.iframe`
   width: 100%;
-  height: 600px;
+  height: 800px;
   border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   background: ${({ theme }) => theme.colors.neutrals[50]};
   
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    height: 500px;
+    height: 700px;
   }
   
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    height: 400px;
+    height: 600px;
   }
 `;
 
@@ -109,21 +134,47 @@ const InstagramIcon = styled(motion.div)`
 const FollowButton = styled(motion.a)`
   display: inline-flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing[2]};
-  padding: ${({ theme }) => theme.spacing[4]} ${({ theme }) => theme.spacing[8]};
+  gap: ${({ theme }) => theme.spacing[3]};
+  padding: ${({ theme }) => theme.spacing[5]} ${({ theme }) => theme.spacing[10]};
   background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
   color: ${({ theme }) => theme.colors.primary.white};
   text-decoration: none;
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  font-size: ${({ theme }) => theme.typography.sizes.base};
+  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
+  font-size: ${({ theme }) => theme.typography.sizes.lg};
   font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  transition: all ${({ theme }) => theme.transitions.base};
-  margin-top: ${({ theme }) => theme.spacing[6]};
+  transition: all ${({ theme }) => theme.transitions.smooth};
+  margin-top: ${({ theme }) => theme.spacing[8]};
   border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+  }
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(240, 148, 51, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(240, 148, 51, 0.5);
+    
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    padding: ${({ theme }) => theme.spacing[4]} ${({ theme }) => theme.spacing[8]};
+    font-size: ${({ theme }) => theme.typography.sizes.base};
   }
 `;
 
@@ -144,23 +195,170 @@ const LoadingPlaceholder = styled.div`
   }
 `;
 
+const LocalGallery = styled(motion.div)`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: ${({ theme }) => theme.spacing[6]};
+  margin-top: ${({ theme }) => theme.spacing[8]};
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: ${({ theme }) => theme.spacing[4]};
+  }
+`;
+
+const GalleryImage = styled(motion.img)`
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  cursor: pointer;
+  transition: all ${({ theme }) => theme.transitions.smooth};
+  box-shadow: ${({ theme }) => theme.shadows.base};
+  
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: ${({ theme }) => theme.shadows.goldHover};
+  }
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    height: 300px;
+  }
+`;
+
+const GalleryImageContainer = styled(motion.div)`
+  position: relative;
+  overflow: hidden;
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  background: ${({ theme }) => theme.colors.neutrals[100]};
+`;
+
+const ImageOverlay = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: ${({ theme }) => theme.colors.gradients.luxury};
+  opacity: 0;
+  transition: all ${({ theme }) => theme.transitions.smooth};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.primary.white};
+  font-size: ${({ theme }) => theme.typography.sizes.lg};
+  font-weight: ${({ theme }) => theme.typography.weights.medium};
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing[4]};
+
+  ${GalleryImageContainer}:hover & {
+    opacity: 0.9;
+  }
+`;
+
+const FallbackMessage = styled(motion.div)`
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing[8]};
+  background: ${({ theme }) => theme.colors.neutrals[50]};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  margin-bottom: ${({ theme }) => theme.spacing[6]};
+  border: 1px solid ${({ theme }) => theme.colors.neutrals[200]};
+`;
+
 const Gallery: React.FC = () => {
   const { ref, inView } = useScrollAnimation();
+  const [instagramLoaded, setInstagramLoaded] = useState(false);
+  const [showLocalGallery, setShowLocalGallery] = useState(false);
+  const [localImages] = useState([
+    {
+      src: '/assets/images/gallery/elegant-french-tips.jpeg',
+      alt: 'Elegant French Tips - Classic nail design',
+      title: 'Elegant French Tips'
+    },
+    {
+      src: '/assets/images/gallery/luxury-gold-accent.jpeg',
+      alt: 'Luxury Gold Accents - Premium nail art',
+      title: 'Luxury Gold Accents'
+    },
+    {
+      src: '/assets/images/gallery/artistic-floral-design.jpeg',
+      alt: 'Artistic Floral Design - Hand-painted nails',
+      title: 'Artistic Floral Design'
+    },
+    {
+      src: '/assets/images/gallery/modern-geometric-pattern.jpeg',
+      alt: 'Modern Geometric Pattern - Contemporary style',
+      title: 'Modern Geometric'
+    },
+    {
+      src: '/assets/images/gallery/classic-nude-elegance.jpeg',
+      alt: 'Classic Nude Elegance - Timeless beauty',
+      title: 'Classic Nude Elegance'
+    },
+    {
+      src: '/assets/images/gallery/bold-statement-nails.jpeg',
+      alt: 'Bold Statement Nails - Eye-catching design',
+      title: 'Bold Statement'
+    }
+  ]);
 
   useEffect(() => {
     // Load Instagram embed script
     const script = document.createElement('script');
     script.async = true;
     script.src = '//www.instagram.com/embed.js';
-    document.body.appendChild(script);
+    
+    // Set timeout to show local gallery if Instagram doesn't load
+    const fallbackTimer = setTimeout(() => {
+      if (!instagramLoaded) {
+        setShowLocalGallery(true);
+        // Show the fallback blockquote
+        const fallbackElement = document.getElementById('instagram-fallback');
+        if (fallbackElement) {
+          fallbackElement.style.display = 'block';
+        }
+      }
+    }, 8000); // Increased timeout to 8 seconds
+
+    // Check if Instagram script loads successfully
+    script.onload = () => {
+      setInstagramLoaded(true);
+      clearTimeout(fallbackTimer);
+      
+      // Process any Instagram embeds
+      if (window.instgrm && window.instgrm.Embeds) {
+        window.instgrm.Embeds.process();
+      }
+    };
+
+    script.onerror = () => {
+      setShowLocalGallery(true);
+      clearTimeout(fallbackTimer);
+      
+      // Show the fallback blockquote
+      const fallbackElement = document.getElementById('instagram-fallback');
+      if (fallbackElement) {
+        fallbackElement.style.display = 'block';
+      }
+    };
+
+    // Check if script already exists
+    const existingScript = document.querySelector('script[src*="instagram.com/embed.js"]');
+    if (!existingScript) {
+      document.body.appendChild(script);
+    } else {
+      setInstagramLoaded(true);
+      clearTimeout(fallbackTimer);
+    }
 
     return () => {
+      clearTimeout(fallbackTimer);
       // Cleanup script on unmount
       if (document.body.contains(script)) {
         document.body.removeChild(script);
       }
     };
-  }, []);
+  }, [instagramLoaded]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -193,63 +391,142 @@ const Gallery: React.FC = () => {
           animate={inView ? "visible" : "hidden"}
         >
           <SectionHeader variants={itemVariants}>
-            <SectionTitle>✨ Follow Our Journey</SectionTitle>
+            <SectionTitle>💎 Latest Nail Art Showcase</SectionTitle>
             <SectionSubtitle>
-              Stay updated with our latest nail art creations, behind-the-scenes moments, 
-              and inspiration. Follow us on Instagram for daily doses of nail artistry.
+              Discover our stunning nail art portfolio and get inspired by our latest creations. 
+              Follow @nakhakala on Instagram for daily nail inspiration and behind-the-scenes content.
             </SectionSubtitle>
           </SectionHeader>
 
-          <InstagramEmbed
-            variants={itemVariants}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-          >
-            <InstagramIcon variants={itemVariants}>
-              📸
-            </InstagramIcon>
-            
-            {/* Instagram Embed */}
-            <blockquote 
-              className="instagram-media" 
-              data-instgrm-permalink="https://www.instagram.com/nakhakala/" 
-              data-instgrm-version="14"
-              style={{
-                background: '#FFF',
-                border: 0,
-                borderRadius: '3px',
-                boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
-                margin: '1px',
-                maxWidth: '540px',
-                minWidth: '326px',
-                padding: 0,
-                width: 'calc(100% - 2px)'
-              }}
-            >
-              <div style={{ padding: '16px' }}>
-                <LoadingPlaceholder>
-                  <InstagramIcon>📱</InstagramIcon>
-                  <p>Loading Instagram feed...</p>
-                  <p style={{ fontSize: '0.9rem', color: '#999' }}>
-                    If this doesn't load, visit us directly on Instagram
-                  </p>
-                </LoadingPlaceholder>
-              </div>
-            </blockquote>
-
-            <FollowButton
-              href="https://instagram.com/nakhakala"
-              target="_blank"
-              rel="noopener noreferrer"
+          {/* Show local gallery if Instagram doesn't load */}
+          {showLocalGallery ? (
+            <motion.div variants={itemVariants}>
+              <FallbackMessage variants={itemVariants}>
+                <InstagramIcon>📸</InstagramIcon>
+                <h3 style={{ margin: '16px 0 8px 0', color: '#D4AF37' }}>Our Latest Work</h3>
+                <p style={{ margin: '0 0 16px 0', color: '#666' }}>
+                  Check out our stunning nail art creations below, or visit our Instagram for more!
+                </p>
+              </FallbackMessage>
+              
+              <LocalGallery
+                variants={containerVariants}
+                initial="hidden"
+                animate={inView ? "visible" : "hidden"}
+              >
+                {localImages.map((image: any, index: number) => (
+                  <GalleryImageContainer
+                    key={index}
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <OptimizedImage
+                      src={image.src}
+                      alt={image.alt}
+                      loading="lazy"
+                      onError={() => {
+                        console.log(`Failed to load image: ${image.title}`);
+                      }}
+                    />
+                    <ImageOverlay>
+                      <span>{image.title}</span>
+                    </ImageOverlay>
+                  </GalleryImageContainer>
+                ))}
+              </LocalGallery>
+              
+              <FollowButton
+                href="https://instagram.com/nakhakala"
+                target="_blank"
+                rel="noopener noreferrer"
+                variants={itemVariants}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                style={{ marginTop: '32px', display: 'inline-flex' }}
+              >
+                <span>📸</span>
+                Follow @nakhakala for More
+                <span>✨</span>
+              </FollowButton>
+            </motion.div>
+          ) : (
+            <InstagramEmbed
               variants={itemVariants}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
             >
-              <span>📱</span>
-              Follow @nakhakala
-              <span>✨</span>
-            </FollowButton>
-          </InstagramEmbed>
+              <InstagramIcon variants={itemVariants}>
+                📸
+              </InstagramIcon>
+              
+              {/* Enhanced Instagram Profile Embed */}
+              <div style={{ 
+                background: '#fff',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                marginBottom: '24px',
+                border: '1px solid #dbdbdb'
+              }}>
+                <iframe
+                  src="https://www.instagram.com/nakhakala/embed/"
+                  width="100%"
+                  height="800"
+                  frameBorder="0"
+                  scrolling="yes"
+                  allowTransparency={true}
+                  style={{
+                    border: 'none',
+                    borderRadius: '12px'
+                  }}
+                  title="Nakhakala Instagram Feed"
+                />
+              </div>
+              
+              {/* Fallback for manual embed */}
+              <blockquote 
+                className="instagram-media" 
+                data-instgrm-permalink="https://www.instagram.com/nakhakala/" 
+                data-instgrm-version="14"
+                style={{
+                  background: '#FFF',
+                  border: 0,
+                  borderRadius: '12px',
+                  boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
+                  margin: '16px auto',
+                  maxWidth: '100%',
+                  minWidth: '326px',
+                  padding: 0,
+                  width: 'calc(100% - 2px)',
+                  display: 'none'
+                }}
+                id="instagram-fallback"
+              >
+                <div style={{ padding: '16px' }}>
+                  <LoadingPlaceholder>
+                    <InstagramIcon>📱</InstagramIcon>
+                    <p>Loading Instagram feed...</p>
+                    <p style={{ fontSize: '0.9rem', color: '#999' }}>
+                      If this doesn't load, visit us directly on Instagram
+                    </p>
+                  </LoadingPlaceholder>
+                </div>
+              </blockquote>
+
+              <FollowButton
+                href="https://instagram.com/nakhakala"
+                target="_blank"
+                rel="noopener noreferrer"
+                variants={itemVariants}
+                whileHover={{ scale: 1.02, y: -3 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span>📸</span>
+                Follow @nakhakala
+                <span>✨</span>
+              </FollowButton>
+            </InstagramEmbed>
+          )}
         </motion.div>
       </InstagramContainer>
     </InstagramSection>

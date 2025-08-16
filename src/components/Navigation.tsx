@@ -128,6 +128,12 @@ const NavLink = styled(motion.button)<{ active: boolean }>`
     }
   }
 
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.gold.primary};
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     font-size: ${({ theme }) => theme.typography.sizes.lg};
     padding: ${({ theme }) => theme.spacing[3]} 0;
@@ -219,6 +225,8 @@ const Navigation: React.FC = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
+      role="navigation"
+      aria-label="Main navigation"
     >
       <NavContent>
         {/* Brand Logo */}
@@ -228,6 +236,15 @@ const Navigation: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           whileHover={{ scale: 1.05 }}
           onClick={() => scrollToSection('home')}
+          role="button"
+          aria-label="Go to home section"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              scrollToSection('home');
+            }
+          }}
         >
           <BrandLogo
             src="/nakhakala-logo-transparent.png"
@@ -236,9 +253,9 @@ const Navigation: React.FC = () => {
         </BrandContainer>
 
         {/* Desktop Menu */}
-        <DesktopNavMenu>
+        <DesktopNavMenu role="menubar" aria-label="Main menu">
           {navItems.map((item, index) => (
-            <NavItemContainer key={`desktop-${item.id}`}>
+            <NavItemContainer key={`desktop-${item.id}`} role="none">
               <NavLink
                 active={activeSection === item.id}
                 onClick={() => scrollToSection(item.id)}
@@ -247,6 +264,9 @@ const Navigation: React.FC = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
+                role="menuitem"
+                aria-current={activeSection === item.id ? 'page' : undefined}
+                aria-label={`Navigate to ${item.label} section`}
               >
                 {item.label}
               </NavLink>
@@ -259,6 +279,9 @@ const Navigation: React.FC = () => {
           onClick={toggleMenu}
           animate={isMenuOpen ? "open" : "closed"}
           whileTap={{ scale: 0.95 }}
+          aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-menu"
         >
           <HamburgerLine variants={hamburgerTop} />
           <HamburgerLine variants={hamburgerMiddle} />
@@ -270,19 +293,25 @@ const Navigation: React.FC = () => {
       <AnimatePresence>
         {isMenuOpen && (
           <MobileNavMenu
+            id="mobile-menu"
             variants={menuVariants}
             initial="closed"
             animate="open"
             exit="closed"
+            role="menu"
+            aria-label="Mobile navigation menu"
           >
             {navItems.map((item) => (
-              <NavItemContainer key={item.id}>
+              <NavItemContainer key={item.id} role="none">
                 <NavLink
                   variants={itemVariants}
                   active={activeSection === item.id}
                   onClick={() => scrollToSection(item.id)}
                   whileHover={{ y: -2 }}
                   whileTap={{ y: 0 }}
+                  role="menuitem"
+                  aria-current={activeSection === item.id ? 'page' : undefined}
+                  aria-label={`Navigate to ${item.label} section`}
                 >
                   {item.label}
                 </NavLink>

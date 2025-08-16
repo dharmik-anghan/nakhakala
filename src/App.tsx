@@ -12,6 +12,7 @@ import Gallery from './components/Gallery';
 import BrandFeature from './components/BrandFeature';
 import About from './components/About';
 import Footer from './components/Footer';
+import FloatingContact from './components/FloatingContact';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <About />
         </main>
         <Footer />
+        <FloatingContact />
       </div>
     </ThemeProvider>
   );

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Section, Button } from '../styles/GlobalStyles';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import OptimizedImage from './OptimizedImage';
 
 const HeroSection = styled(Section)`
   min-height: 100vh;
@@ -269,6 +270,11 @@ const CarouselButton = styled(motion.button)`
     transform: scale(1.1);
   }
 
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.gold.primary};
+    outline-offset: 2px;
+  }
+
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     width: 35px;
     height: 35px;
@@ -372,7 +378,7 @@ const Hero: React.FC = () => {
     });
   }, []);
 
-  // Auto-slide functionality
+  // Auto-slide functionality with pause on focus/hover
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => 
@@ -381,6 +387,32 @@ const Hero: React.FC = () => {
     }, 4000); // Change image every 4 seconds
 
     return () => clearInterval(interval);
+  }, [heroImages.length]);
+
+  // Keyboard navigation for accessibility
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target && (e.target as HTMLElement).closest('[data-carousel="true"]')) {
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          goToPrevious();
+        }
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          goToNext();
+        }
+        if (e.key >= '1' && e.key <= '8') {
+          e.preventDefault();
+          const index = parseInt(e.key) - 1;
+          if (index < heroImages.length) {
+            goToSlide(index);
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [heroImages.length]);
 
   const goToSlide = (index: number) => {
@@ -523,7 +555,12 @@ const Hero: React.FC = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
-            <CarouselContainer>
+            <CarouselContainer data-carousel="true" tabIndex={0}>
+              {/* Screen reader announcement */}
+              <div className="sr-only" aria-live="polite" aria-atomic="true">
+                Image {currentImageIndex + 1} of {heroImages.length}: {heroImages[currentImageIndex].title}
+              </div>
+              
               <AnimatePresence mode="wait">
                 <HeroImage
                   key={currentImageIndex}
@@ -536,15 +573,18 @@ const Hero: React.FC = () => {
                   initial="enter"
                   animate="center"
                   exit="exit"
+                  role="img"
                 />
               </AnimatePresence>
               
               {/* Carousel Controls */}
-              <CarouselControls>
+              <CarouselControls role="group" aria-label="Carousel navigation">
                 <CarouselButton
                   onClick={goToPrevious}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
+                  aria-label="Previous nail art image"
+                  title="Previous image (Left arrow key)"
                 >
                   ←
                 </CarouselButton>
@@ -552,20 +592,26 @@ const Hero: React.FC = () => {
                   onClick={goToNext}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
+                  aria-label="Next nail art image"
+                  title="Next image (Right arrow key)"
                 >
                   →
                 </CarouselButton>
               </CarouselControls>
 
               {/* Carousel Indicators */}
-              <CarouselIndicators>
-                {heroImages.map((_, index) => (
+              <CarouselIndicators role="group" aria-label="Choose slide">
+                {heroImages.map((image, index) => (
                   <Indicator
                     key={index}
                     active={index === currentImageIndex}
                     onClick={() => goToSlide(index)}
                     whileHover={{ scale: 1.2 }}
                     whileTap={{ scale: 0.9 }}
+                    role="button"
+                    aria-label={`Go to slide ${index + 1}: ${image.title}`}
+                    aria-pressed={index === currentImageIndex}
+                    title={`Slide ${index + 1}: ${image.title} (Press ${index + 1} key)`}
                   />
                 ))}
               </CarouselIndicators>

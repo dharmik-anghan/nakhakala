@@ -188,72 +188,179 @@ const FeatureItem = styled(motion.li)`
 `;
 
 const BookingSection = styled(motion.div)`
-  margin-top: ${({ theme }) => theme.spacing[6]};
-  padding: ${({ theme }) => theme.spacing[6]};
-  background: ${({ theme }) => theme.colors.gradients.soft};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  margin-top: ${({ theme }) => theme.spacing[12]};
+  padding: ${({ theme }) => theme.spacing[10]};
+  background: ${({ theme }) => theme.colors.primary.white};
+  border-radius: ${({ theme }) => theme.borderRadius['3xl']};
+  box-shadow: ${({ theme }) => theme.shadows.premium};
   border: 1px solid ${({ theme }) => theme.colors.gold.champagne};
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: ${({ theme }) => theme.colors.gradients.gold};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    padding: ${({ theme }) => theme.spacing[8]};
+    margin-top: ${({ theme }) => theme.spacing[8]};
+  }
 `;
 
-const BookingTitle = styled.h4`
-  font-size: ${({ theme }) => theme.typography.sizes.lg};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
+const BookingHeader = styled.div`
+  text-align: center;
+  margin-bottom: ${({ theme }) => theme.spacing[8]};
+`;
+
+const BookingTitle = styled.h3`
+  font-family: ${({ theme }) => theme.typography.fonts.display};
+  font-size: ${({ theme }) => theme.typography.sizes['3xl']};
+  font-weight: ${({ theme }) => theme.typography.weights.bold};
   color: ${({ theme }) => theme.colors.primary.black};
   margin-bottom: ${({ theme }) => theme.spacing[4]};
-  text-align: center;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -${({ theme }) => theme.spacing[3]};
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: ${({ theme }) => theme.colors.gradients.gold};
+    border-radius: 2px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    font-size: ${({ theme }) => theme.typography.sizes['2xl']};
+  }
 `;
 
-const BookingMethod = styled(motion.div)`
+const BookingSubtitle = styled.p`
+  font-size: ${({ theme }) => theme.typography.sizes.lg};
+  color: ${({ theme }) => theme.colors.neutrals[600]};
+  margin: 0;
+  line-height: ${({ theme }) => theme.typography.lineHeights.relaxed};
+`;
+
+const BookingCTA = styled(motion.div)`
   display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: ${({ theme }) => theme.spacing[6]};
+`;
+
+const PrimaryBookingButton = styled(motion.a)`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: ${({ theme }) => theme.spacing[3]};
-  margin-bottom: ${({ theme }) => theme.spacing[3]};
-  padding: ${({ theme }) => theme.spacing[3]};
-  background: ${({ theme }) => theme.colors.primary.white};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  transition: all ${({ theme }) => theme.transitions.base};
+  padding: ${({ theme }) => theme.spacing[5]} ${({ theme }) => theme.spacing[10]};
+  background: ${({ theme }) => theme.colors.gradients.gold};
+  color: ${({ theme }) => theme.colors.primary.white};
+  text-decoration: none;
+  font-size: ${({ theme }) => theme.typography.sizes.lg};
+  font-weight: ${({ theme }) => theme.typography.weights.semibold};
+  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
+  box-shadow: ${({ theme }) => theme.shadows.goldHover};
+  transition: all ${({ theme }) => theme.transitions.smooth};
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4);
+    
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    padding: ${({ theme }) => theme.spacing[4]} ${({ theme }) => theme.spacing[8]};
+    font-size: ${({ theme }) => theme.typography.sizes.base};
+  }
+`;
+
+const BookingSteps = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${({ theme }) => theme.spacing[5]};
+  margin-top: ${({ theme }) => theme.spacing[8]};
+  padding-top: ${({ theme }) => theme.spacing[8]};
+  border-top: 1px solid ${({ theme }) => theme.colors.neutrals[200]};
+`;
+
+const StepCard = styled(motion.div)`
+  display: flex;
+  align-items: flex-start;
+  gap: ${({ theme }) => theme.spacing[4]};
+  padding: ${({ theme }) => theme.spacing[5]};
+  background: ${({ theme }) => theme.colors.gradients.soft};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  border: 1px solid ${({ theme }) => theme.colors.neutrals[200]};
+  transition: all ${({ theme }) => theme.transitions.smooth};
 
   &:hover {
     transform: translateY(-2px);
+    border-color: ${({ theme }) => theme.colors.gold.champagne};
     box-shadow: ${({ theme }) => theme.shadows.base};
   }
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 `;
 
-const BookingIcon = styled.span`
-  font-size: ${({ theme }) => theme.typography.sizes.xl};
-  min-width: 24px;
+const StepNumber = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: ${({ theme }) => theme.colors.gradients.gold};
+  color: ${({ theme }) => theme.colors.primary.white};
+  border-radius: 50%;
+  font-size: ${({ theme }) => theme.typography.sizes.lg};
+  font-weight: ${({ theme }) => theme.typography.weights.bold};
+  flex-shrink: 0;
 `;
 
-const BookingText = styled.div`
+const StepContent = styled.div`
   flex: 1;
-  
-  strong {
-    color: ${({ theme }) => theme.colors.primary.black};
-    font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  }
-  
-  a {
-    color: ${({ theme }) => theme.colors.gold.primary};
-    text-decoration: none;
-    font-weight: ${({ theme }) => theme.typography.weights.semibold};
-    
-    &:hover {
-      color: ${({ theme }) => theme.colors.gold.dark};
-    }
-  }
 `;
 
-const BookingNote = styled.div`
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
+const StepTitle = styled.h4`
+  font-size: ${({ theme }) => theme.typography.sizes.lg};
+  font-weight: ${({ theme }) => theme.typography.weights.semibold};
+  color: ${({ theme }) => theme.colors.primary.black};
+  margin: 0 0 ${({ theme }) => theme.spacing[2]} 0;
+`;
+
+const StepDescription = styled.p`
+  font-size: ${({ theme }) => theme.typography.sizes.base};
   color: ${({ theme }) => theme.colors.neutrals[600]};
-  text-align: center;
-  margin-top: ${({ theme }) => theme.spacing[4]};
-  padding-top: ${({ theme }) => theme.spacing[4]};
-  border-top: 1px solid ${({ theme }) => theme.colors.neutrals[200]};
+  margin: 0;
   line-height: ${({ theme }) => theme.typography.lineHeights.relaxed};
 `;
 
@@ -491,34 +598,70 @@ const Services: React.FC = () => {
           style={{ marginTop: '4rem' }}
         >
           <BookingSection variants={itemVariants}>
-            <BookingTitle>✅ How to Book Any Service</BookingTitle>
-            
-            <BookingMethod
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            >
-              <BookingIcon>💬</BookingIcon>
-              <BookingText>
-                <strong>DM on Instagram:</strong> <a href="https://instagram.com/nakhakala" target="_blank" rel="noopener noreferrer">@nakhakala</a>
-              </BookingText>
-            </BookingMethod>
+            <BookingHeader>
+              <BookingTitle>Ready to Book Your Appointment?</BookingTitle>
+              <BookingSubtitle>
+                Start your nail transformation journey with us. Easy booking through Instagram.
+              </BookingSubtitle>
+            </BookingHeader>
 
-            <BookingMethod
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            >
-              <BookingIcon>📱</BookingIcon>
-              <BookingText>
-                <strong>WhatsApp:</strong> <a href="https://wa.me/YOUR_NUMBER" target="_blank" rel="noopener noreferrer">Click to chat</a>
-              </BookingText>
-            </BookingMethod>
+            <BookingCTA variants={itemVariants}>
+              <PrimaryBookingButton
+                href="https://instagram.com/nakhakala"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.02, y: -3 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span>📸</span>
+                Book Now on Instagram
+                <span>✨</span>
+              </PrimaryBookingButton>
+            </BookingCTA>
 
-            <BookingNote>
-              📸 <strong>Please share:</strong><br />
-              • Preferred date & time<br />
-              • Your inspo picture<br />
-              • Any specific nail design or length you have in mind
-            </BookingNote>
+            <BookingSteps>
+              <StepCard
+                variants={itemVariants}
+                whileHover={{ scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                <StepNumber>1</StepNumber>
+                <StepContent>
+                  <StepTitle>Follow & Message</StepTitle>
+                  <StepDescription>
+                    Follow @nakhakala on Instagram and send us a DM with your booking request
+                  </StepDescription>
+                </StepContent>
+              </StepCard>
+
+              <StepCard
+                variants={itemVariants}
+                whileHover={{ scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                <StepNumber>2</StepNumber>
+                <StepContent>
+                  <StepTitle>Share Your Vision</StepTitle>
+                  <StepDescription>
+                    Send inspiration photos, preferred dates, nail length, and any special requests
+                  </StepDescription>
+                </StepContent>
+              </StepCard>
+
+              <StepCard
+                variants={itemVariants}
+                whileHover={{ scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                <StepNumber>3</StepNumber>
+                <StepContent>
+                  <StepTitle>Confirm & Enjoy</StepTitle>
+                  <StepDescription>
+                    We'll confirm your appointment details and you're all set for your nail transformation!
+                  </StepDescription>
+                </StepContent>
+              </StepCard>
+            </BookingSteps>
           </BookingSection>
         </motion.div>
       </ServicesContainer>
