@@ -106,17 +106,63 @@ const ServiceCard = styled(motion.div)`
   }
 `;
 
-const ServiceHeader = styled.div`
-  padding: ${({ theme }) => theme.spacing[8]} ${({ theme }) => theme.spacing[8]} ${({ theme }) => theme.spacing[6]};
+const PopularBadge = styled(motion.div)`
+  position: absolute;
+  top: ${({ theme }) => theme.spacing[4]};
+  right: ${({ theme }) => theme.spacing[4]};
+  background: ${({ theme }) => theme.colors.gradients.gold};
+  color: ${({ theme }) => theme.colors.primary.white};
+  padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[4]};
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  font-size: ${({ theme }) => theme.typography.sizes.xs};
+  font-weight: ${({ theme }) => theme.typography.weights.bold};
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: ${({ theme }) => theme.shadows.base};
+  z-index: 2;
+  
+  &::before {
+    content: '⭐';
+    margin-right: ${({ theme }) => theme.spacing[1]};
+  }
+`;
+
+const ServiceImageHeader = styled.div<{ hasImage?: boolean }>`
+  ${({ hasImage }) => hasImage ? `
+    width: 100%;
+    height: 240px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.1));
+    }
+  ` : ''}
+`;
+
+const ServiceHeader = styled.div<{ hasImage?: boolean }>`
+  padding: ${({ theme, hasImage }) => hasImage ? 
+    `${theme.spacing[6]} ${theme.spacing[8]} ${theme.spacing[6]}` : 
+    `${theme.spacing[8]} ${theme.spacing[8]} ${theme.spacing[6]}`
+  };
   text-align: center;
   border-bottom: 1px solid ${({ theme }) => theme.colors.neutrals[100]};
 `;
 
-const ServiceIcon = styled(motion.div)`
+const ServiceIcon = styled(motion.div)<{ hasImage?: boolean }>`
   font-size: ${({ theme }) => theme.typography.sizes['4xl']};
   margin-bottom: ${({ theme }) => theme.spacing[4]};
   height: 80px;
-  display: flex;
+  display: ${({ hasImage }) => hasImage ? 'none' : 'flex'};
   align-items: center;
   justify-content: center;
   background: ${({ theme }) => theme.colors.gradients.soft};
@@ -370,6 +416,8 @@ interface Service {
   price: string;
   description: string;
   features: string[];
+  image?: string;
+  popular?: boolean;
 }
 
 const Services: React.FC = () => {
@@ -387,7 +435,8 @@ const Services: React.FC = () => {
         'Premium gel polish',
         'Top coat for extra shine',
         'Lasts 2-3 weeks'
-      ]
+      ],
+      image: '/assets/images/services/gel-polish-natural-nails.png'
     },
     {
       icon: '🦶',
@@ -400,7 +449,8 @@ const Services: React.FC = () => {
         'Long-lasting gel polish',
         'Professional application',
         'Perfect for sandal season'
-      ]
+      ],
+      image: '/assets/images/services/gel-polish-feet.png'
     },
     {
       icon: '✨',
@@ -413,7 +463,8 @@ const Services: React.FC = () => {
         'Professional shaping',
         'Gel polish included',
         'Easy removal process'
-      ]
+      ],
+      image: '/assets/images/services/temporary-extensions.png'
     },
     {
       icon: '👑',
@@ -425,8 +476,10 @@ const Services: React.FC = () => {
         'Various designs available',
         'Easy application',
         'Reusable options',
-        'Perfect for busy lifestyles'
-      ]
+        'Stays up to 15-20 days'
+      ],
+      image: '/assets/images/services/press-on-nails.png',
+      popular: true
     },
     {
       icon: '🌟',
@@ -439,7 +492,8 @@ const Services: React.FC = () => {
         'Natural nail enhancement',
         'Long-lasting durability',
         'Healthy nail growth support'
-      ]
+      ],
+      image: '/assets/images/services/gel-overlay.png'
     },
     {
       icon: '💎',
@@ -452,7 +506,8 @@ const Services: React.FC = () => {
         'Professional gel overlay',
         'Natural appearance',
         'Strong and durable'
-      ]
+      ],
+      image: '/assets/images/services/gel-extensions-half-tips.png'
     },
     {
       icon: '🎨',
@@ -465,7 +520,22 @@ const Services: React.FC = () => {
         'No damage to natural nails',
         'Custom shapes available',
         'Latest nail technology'
-      ]
+      ],
+      image: '/assets/images/services/polygel-extensions.png'
+    },
+    {
+      icon: '💫',
+      title: 'Soft Gel-X Extensions',
+      price: '₹899',
+      description: 'Premium Soft Gel-X extensions for natural-looking, flexible, and durable nail enhancement',
+      features: [
+        'Soft and flexible feel',
+        'Natural nail appearance',
+        'Lightweight extensions',
+        'Long-lasting durability',
+        'Professional application'
+      ],
+      image: '/assets/images/services/soft-gel-x-extensions.png'
     },
     {
       icon: '🧹',
@@ -478,7 +548,8 @@ const Services: React.FC = () => {
         'Gel Extension Removal - ₹399',
         'Safe removal process',
         'Nail care included'
-      ]
+      ],
+      image: '/assets/images/services/removal-service.png'
     }
   ];
 
@@ -556,8 +627,23 @@ const Services: React.FC = () => {
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              <ServiceHeader>
-                <ServiceIcon variants={itemVariants}>
+              {service.popular && (
+                <PopularBadge
+                  initial={{ scale: 0, rotate: -10 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                >
+                  Popular Choice
+                </PopularBadge>
+              )}
+              {service.image && (
+                <ServiceImageHeader 
+                  hasImage={true}
+                  style={{ backgroundImage: `url(${service.image})` }}
+                />
+              )}
+              <ServiceHeader hasImage={!!service.image}>
+                <ServiceIcon hasImage={!!service.image} variants={itemVariants}>
                   {service.icon}
                 </ServiceIcon>
                 <ServiceTitle variants={itemVariants}>
