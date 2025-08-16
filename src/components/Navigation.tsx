@@ -34,17 +34,28 @@ const NavContent = styled.div`
   position: relative;
 `;
 
-const BrandName = styled(motion.h1)`
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.primary.black};
-  font-family: ${({ theme }) => theme.typography.fonts.display};
-  margin: 0;
+const BrandContainer = styled(motion.div)`
   cursor: pointer;
-  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  transition: all ${({ theme }) => theme.transitions.smooth};
   
   &:hover {
-    color: ${({ theme }) => theme.colors.gold.primary};
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+  }
+`;
+
+const BrandLogo = styled.img`
+  height: 45px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  transition: all ${({ theme }) => theme.transitions.smooth};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    height: 40px;
+    max-width: 100px;
   }
 `;
 
@@ -210,19 +221,19 @@ const Navigation: React.FC = () => {
       transition={{ duration: 0.6, ease: 'easeOut' }}
     >
       <NavContent>
-        {/* Brand Name */}
-        <motion.div
+        {/* Brand Logo */}
+        <BrandContainer
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
+          whileHover={{ scale: 1.05 }}
+          onClick={() => scrollToSection('home')}
         >
-          <BrandName
-            whileHover={{ scale: 1.05 }}
-            onClick={() => scrollToSection('home')}
-          >
-            Nakhakala
-          </BrandName>
-        </motion.div>
+          <BrandLogo
+            src="/nakhakala-logo-transparent.png"
+            alt="Nakhakala - Premium Nail Artistry"
+          />
+        </BrandContainer>
 
         {/* Desktop Menu */}
         <DesktopNavMenu>

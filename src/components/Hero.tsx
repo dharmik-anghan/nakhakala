@@ -70,20 +70,56 @@ const HeroTitle = styled(motion.h1)`
   }
 `;
 
-const TitleMain = styled(motion.span)`
+const LogoContainer = styled(motion.div)`
   display: block;
-  background: ${({ theme }) => theme.colors.gradients.premium};
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-size: 200% 200%;
-  animation: subtleGradientShift 6s ease-in-out infinite;
-  font-family: ${({ theme }) => theme.typography.fonts.display};
-  letter-spacing: -0.02em;
+  max-width: 400px;
+  width: 100%;
+  height: 120px;
+  margin: ${({ theme }) => theme.spacing[4]} 0;
+  background: transparent;
+  transition: all ${({ theme }) => theme.transitions.smooth};
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 
-  @keyframes subtleGradientShift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+  &:hover {
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.4));
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
+    max-width: 350px;
+    height: 100px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    max-width: 300px;
+    height: 90px;
+    justify-content: center;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    max-width: 260px;
+    height: 80px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    max-width: 220px;
+    height: 70px;
+  }
+`;
+
+const LogoImage = styled.img`
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+  background: transparent;
+  transition: all ${({ theme }) => theme.transitions.smooth};
+
+  &:hover {
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
   }
 `;
 
@@ -430,12 +466,16 @@ const Hero: React.FC = () => {
             <TitleSubtitle variants={itemVariants}>
               Premium Nail Artistry
             </TitleSubtitle>
-            <TitleMain
+            <LogoContainer
               variants={itemVariants}
-              whileHover={{ scale: 1.01 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              Nakhakala
-            </TitleMain>
+              <LogoImage
+                src="/nakhakala-logo-transparent.png"
+                alt="Nakhakala - Premium Nail Artistry"
+              />
+            </LogoContainer>
           </HeroTitle>
 
           <HeroDescription variants={itemVariants}>
