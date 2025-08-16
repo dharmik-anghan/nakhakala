@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Section, Button } from '../styles/GlobalStyles';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import OptimizedImage from './OptimizedImage';
 
 const HeroSection = styled(Section)`
   min-height: 100vh;
@@ -326,8 +325,8 @@ const Hero: React.FC = () => {
   const { ref, inView } = useScrollAnimation();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Array of all your nail art images
-  const heroImages = [
+  // Array of all your nail art images (memoized to prevent recreating on every render)
+  const heroImages = useMemo(() => [
     {
       src: '/assets/images/gallery/elegant-french-tips.jpeg',
       alt: 'Elegant French Tips - Premium nail art',
@@ -368,7 +367,20 @@ const Hero: React.FC = () => {
       alt: 'Premium Ombré Design - Professional blending',
       title: 'Premium Ombré'
     }
-  ];
+  ], []);
+
+  // Navigation functions (memoized to prevent recreating on every render)
+  const goToSlide = useCallback((index: number) => {
+    setCurrentImageIndex(index);
+  }, []);
+
+  const goToPrevious = useCallback(() => {
+    setCurrentImageIndex(currentImageIndex === 0 ? heroImages.length - 1 : currentImageIndex - 1);
+  }, [currentImageIndex, heroImages.length]);
+
+  const goToNext = useCallback(() => {
+    setCurrentImageIndex(currentImageIndex === heroImages.length - 1 ? 0 : currentImageIndex + 1);
+  }, [currentImageIndex, heroImages.length]);
 
   // Image preloading for smooth transitions
   useEffect(() => {
@@ -376,7 +388,7 @@ const Hero: React.FC = () => {
       const img = new Image();
       img.src = image.src;
     });
-  }, []);
+  }, [heroImages]);
 
   // Auto-slide functionality with pause on focus/hover
   useEffect(() => {
@@ -413,19 +425,7 @@ const Hero: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [heroImages.length]);
-
-  const goToSlide = (index: number) => {
-    setCurrentImageIndex(index);
-  };
-
-  const goToPrevious = () => {
-    setCurrentImageIndex(currentImageIndex === 0 ? heroImages.length - 1 : currentImageIndex - 1);
-  };
-
-  const goToNext = () => {
-    setCurrentImageIndex(currentImageIndex === heroImages.length - 1 ? 0 : currentImageIndex + 1);
-  };
+  }, [heroImages.length, goToPrevious, goToNext, goToSlide]);
 
   const containerVariants = {
     hidden: { opacity: 0 },

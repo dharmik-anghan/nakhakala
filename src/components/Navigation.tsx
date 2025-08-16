@@ -89,6 +89,9 @@ const MobileNavMenu = styled(motion.ul)`
     padding: ${({ theme }) => theme.spacing[6]};
     box-shadow: ${({ theme }) => theme.shadows.xl};
     border-top: 1px solid ${({ theme }) => theme.colors.neutrals[200]};
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 `;
 
@@ -136,7 +139,21 @@ const NavLink = styled(motion.button)<{ active: boolean }>`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     font-size: ${({ theme }) => theme.typography.sizes.lg};
-    padding: ${({ theme }) => theme.spacing[3]} 0;
+    padding: ${({ theme }) => theme.spacing[4]} ${({ theme }) => theme.spacing[6]};
+    margin: ${({ theme }) => theme.spacing[1]} -${({ theme }) => theme.spacing[6]};
+    border-radius: ${({ theme }) => theme.borderRadius.lg};
+    background: transparent;
+    transition: all ${({ theme }) => theme.transitions.base};
+    
+    &:hover, &:focus, &:active {
+      background: ${({ theme }) => theme.colors.neutrals[50]};
+      color: ${({ theme }) => theme.colors.gold.primary};
+    }
+    
+    &:active {
+      transform: scale(0.98);
+      background: ${({ theme }) => theme.colors.neutrals[100]};
+    }
   }
 `;
 
@@ -146,8 +163,24 @@ const HamburgerButton = styled(motion.button)`
   background: none;
   border: none;
   cursor: pointer;
-  padding: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => theme.spacing[3]};
   gap: 4px;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  transition: all ${({ theme }) => theme.transitions.base};
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.neutrals[100]};
+  }
+
+  &:active {
+    background: ${({ theme }) => theme.colors.neutrals[200]};
+    transform: scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.gold.primary};
+    outline-offset: 2px;
+  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     display: flex;
@@ -165,25 +198,24 @@ const HamburgerLine = styled(motion.span)`
 const menuVariants = {
   closed: {
     opacity: 0,
-    y: -20,
-    transition: {
-      duration: 0.2
-    }
+    y: -20
   },
   open: {
     opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.3,
-      staggerChildren: 0.1
-    }
+    y: 0
   }
-};
+} as const;
 
 const itemVariants = {
-  closed: { opacity: 0, y: -10 },
-  open: { opacity: 1, y: 0 }
-};
+  closed: { 
+    opacity: 0, 
+    y: -10
+  },
+  open: { 
+    opacity: 1, 
+    y: 0
+  }
+} as const;
 
 const hamburgerTop = {
   closed: { rotate: 0, y: 0 },
@@ -298,6 +330,12 @@ const Navigation: React.FC = () => {
             initial="closed"
             animate="open"
             exit="closed"
+            transition={{
+              duration: 0.3,
+              ease: "easeOut",
+              staggerChildren: 0.08,
+              delayChildren: 0.1
+            }}
             role="menu"
             aria-label="Mobile navigation menu"
           >
@@ -307,6 +345,10 @@ const Navigation: React.FC = () => {
                   variants={itemVariants}
                   active={activeSection === item.id}
                   onClick={() => scrollToSection(item.id)}
+                  transition={{
+                    duration: 0.3,
+                    ease: "easeOut"
+                  }}
                   whileHover={{ y: -2 }}
                   whileTap={{ y: 0 }}
                   role="menuitem"
@@ -328,16 +370,19 @@ const Navigation: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             style={{
               position: 'fixed',
-              top: 80,
+              top: 0,
               left: 0,
               right: 0,
               bottom: 0,
               background: 'rgba(0, 0, 0, 0.5)',
               zIndex: -1,
+              touchAction: 'none', // Prevent scrolling underneath
             }}
             onClick={closeMenu}
+            onTouchStart={(e) => e.preventDefault()}
           />
         )}
       </AnimatePresence>

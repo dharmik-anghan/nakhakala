@@ -69,7 +69,7 @@ export const useNavigation = () => {
     setIsMenuOpen(false);
   }, []);
 
-  // Handle escape key to close menu
+  // Handle escape key and touch gestures to close menu
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -77,8 +77,41 @@ export const useNavigation = () => {
       }
     };
 
+    // Touch gesture handling for swipe-to-close
+    let startY = 0;
+    let startX = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY;
+      startX = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!startY || !startX) return;
+
+      const endY = e.changedTouches[0].clientY;
+      const endX = e.changedTouches[0].clientX;
+      const diffY = startY - endY;
+      const diffX = startX - endX;
+
+      // Close menu on upward swipe (menu slides up)
+      if (Math.abs(diffY) > Math.abs(diffX) && diffY > 50) {
+        setIsMenuOpen(false);
+      }
+      
+      // Close menu on rightward swipe (menu slides right)
+      if (Math.abs(diffX) > Math.abs(diffY) && diffX < -50) {
+        setIsMenuOpen(false);
+      }
+
+      startY = 0;
+      startX = 0;
+    };
+
     if (isMenuOpen) {
       document.addEventListener('keydown', handleEscape);
+      document.addEventListener('touchstart', handleTouchStart, { passive: true });
+      document.addEventListener('touchend', handleTouchEnd, { passive: true });
       // Prevent body scroll when menu is open
       document.body.style.overflow = 'hidden';
     } else {
@@ -87,6 +120,8 @@ export const useNavigation = () => {
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchend', handleTouchEnd);
       document.body.style.overflow = 'unset';
     };
   }, [isMenuOpen]);

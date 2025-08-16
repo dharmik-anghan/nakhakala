@@ -106,21 +106,6 @@ const InstagramEmbed = styled(motion.div)`
   }
 `;
 
-const InstagramFrame = styled.iframe`
-  width: 100%;
-  height: 800px;
-  border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
-  background: ${({ theme }) => theme.colors.neutrals[50]};
-  
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    height: 700px;
-  }
-  
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    height: 600px;
-  }
-`;
 
 const InstagramIcon = styled(motion.div)`
   font-size: ${({ theme }) => theme.typography.sizes['3xl']};
@@ -207,24 +192,6 @@ const LocalGallery = styled(motion.div)`
   }
 `;
 
-const GalleryImage = styled(motion.img)`
-  width: 100%;
-  height: 350px;
-  object-fit: cover;
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
-  cursor: pointer;
-  transition: all ${({ theme }) => theme.transitions.smooth};
-  box-shadow: ${({ theme }) => theme.shadows.base};
-  
-  &:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: ${({ theme }) => theme.shadows.goldHover};
-  }
-  
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    height: 300px;
-  }
-`;
 
 const GalleryImageContainer = styled(motion.div)`
   position: relative;
@@ -312,11 +279,6 @@ const Gallery: React.FC = () => {
     const fallbackTimer = setTimeout(() => {
       if (!instagramLoaded) {
         setShowLocalGallery(true);
-        // Show the fallback blockquote
-        const fallbackElement = document.getElementById('instagram-fallback');
-        if (fallbackElement) {
-          fallbackElement.style.display = 'block';
-        }
       }
     }, 8000); // Increased timeout to 8 seconds
 
@@ -334,12 +296,6 @@ const Gallery: React.FC = () => {
     script.onerror = () => {
       setShowLocalGallery(true);
       clearTimeout(fallbackTimer);
-      
-      // Show the fallback blockquote
-      const fallbackElement = document.getElementById('instagram-fallback');
-      if (fallbackElement) {
-        fallbackElement.style.display = 'block';
-      }
     };
 
     // Check if script already exists
@@ -483,35 +439,6 @@ const Gallery: React.FC = () => {
                 />
               </div>
               
-              {/* Fallback for manual embed */}
-              <blockquote 
-                className="instagram-media" 
-                data-instgrm-permalink="https://www.instagram.com/nakhakala/" 
-                data-instgrm-version="14"
-                style={{
-                  background: '#FFF',
-                  border: 0,
-                  borderRadius: '12px',
-                  boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
-                  margin: '16px auto',
-                  maxWidth: '100%',
-                  minWidth: '326px',
-                  padding: 0,
-                  width: 'calc(100% - 2px)',
-                  display: 'none'
-                }}
-                id="instagram-fallback"
-              >
-                <div style={{ padding: '16px' }}>
-                  <LoadingPlaceholder>
-                    <InstagramIcon>📱</InstagramIcon>
-                    <p>Loading Instagram feed...</p>
-                    <p style={{ fontSize: '0.9rem', color: '#999' }}>
-                      If this doesn't load, visit us directly on Instagram
-                    </p>
-                  </LoadingPlaceholder>
-                </div>
-              </blockquote>
 
               <FollowButton
                 href="https://instagram.com/nakhakala"
