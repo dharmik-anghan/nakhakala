@@ -3,24 +3,24 @@ import { Theme } from '../types';
 // Enhanced Theme System with Modern Color Grading
 export const theme: Theme = {
   colors: {
-    // Primary Palette - Sophisticated Black & White with Rich Accents
+    // Primary Palette - Warm Peach & Beige with Natural Tones
     primary: {
-      black: '#0A0A0A',
-      softBlack: '#1A1A1A',
-      charcoal: '#2A2A2A',
+      black: '#2C2C2C',
+      softBlack: '#3D3D3D',
+      charcoal: '#4A4A4A',
       white: '#FFFFFF',
-      offWhite: '#FAFAFA',
-      cream: '#F8F6F3'
+      offWhite: '#FEFEFE',
+      cream: '#FDF8F5'
     },
     
-    // Luxury Gold Gradient System
+    // Warm Peach & Beige Gradient System
     gold: {
-      primary: '#D4AF37',
-      light: '#E6C76B',
-      dark: '#B8941F',
-      rose: '#E8B86D',
-      champagne: '#F7E7CE',
-      bronze: '#CD7F32'
+      primary: '#D4A574',
+      light: '#E8C4A0',
+      dark: '#B8956A',
+      rose: '#E8B4A0',
+      champagne: '#F4E4D6',
+      bronze: '#C8956D'
     },
     
     // Sophisticated Neutral Gradients
@@ -39,12 +39,12 @@ export const theme: Theme = {
     
     // Gradient Definitions
     gradients: {
-      primary: 'linear-gradient(135deg, #0A0A0A 0%, #2A2A2A 100%)',
-      gold: 'linear-gradient(135deg, #D4AF37 0%, #E6C76B 50%, #B8941F 100%)',
-      luxury: 'linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(212, 175, 55, 0.2) 100%)',
-      soft: 'linear-gradient(135deg, #FFFFFF 0%, #FAFAFA 100%)',
-      hero: 'linear-gradient(135deg, #FFFFFF 0%, #F8F6F3 30%, #F5F5F5 100%)',
-      premium: 'linear-gradient(135deg, #0A0A0A 0%, #D4AF37 30%, #B8941F 60%, #0A0A0A 100%)'
+      primary: 'linear-gradient(135deg, #FDF8F5 0%, #F4E4D6 100%)',
+      gold: 'linear-gradient(135deg, #D4A574 0%, #E8C4A0 50%, #B8956A 100%)',
+      luxury: 'linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(232, 196, 160, 0.2) 100%)',
+      soft: 'linear-gradient(135deg, #FFFFFF 0%, #FDF8F5 100%)',
+      hero: 'linear-gradient(135deg, #FDF8F5 0%, #F4E4D6 30%, #E8C4A0 70%, #FDF8F5 100%)',
+      premium: 'linear-gradient(135deg, #D4A574 0%, #E8C4A0 30%, #B8956A 60%, #D4A574 100%)'
     }
   },
   
@@ -130,10 +130,10 @@ export const theme: Theme = {
     '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
     inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
     
-    // Luxury Shadows with Gold Accents
-    gold: '0 10px 30px rgba(212, 175, 55, 0.3)',
-    goldHover: '0 20px 40px rgba(212, 175, 55, 0.4)',
-    premium: '0 25px 50px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(212, 175, 55, 0.1)'
+    // Luxury Shadows with Peach/Beige Accents
+    gold: '0 10px 30px rgba(212, 165, 116, 0.25)',
+    goldHover: '0 20px 40px rgba(212, 165, 116, 0.35)',
+    premium: '0 25px 50px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(212, 165, 116, 0.15)'
   },
   
   // Border Radius System
