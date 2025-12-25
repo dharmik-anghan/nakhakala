@@ -1,6 +1,6 @@
 import { Theme } from '../types';
 
-// Enhanced Theme System with Modern Color Grading
+  // Enhanced Theme System with Modern Color Grading
 export const theme: Theme = {
   colors: {
     // Primary Palette - Warm Peach & Beige with Natural Tones
@@ -44,7 +44,9 @@ export const theme: Theme = {
       luxury: 'linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(232, 196, 160, 0.2) 100%)',
       soft: 'linear-gradient(135deg, #FFFFFF 0%, #FDF8F5 100%)',
       hero: 'linear-gradient(135deg, #FDF8F5 0%, #F4E4D6 30%, #E8C4A0 70%, #FDF8F5 100%)',
-      premium: 'linear-gradient(135deg, #D4A574 0%, #E8C4A0 30%, #B8956A 60%, #D4A574 100%)'
+      premium: 'linear-gradient(135deg, #D4A574 0%, #E8C4A0 30%, #B8956A 60%, #D4A574 100%)',
+      glass: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%)',
+      glassDark: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)'
     }
   },
   
@@ -133,7 +135,8 @@ export const theme: Theme = {
     // Luxury Shadows with Peach/Beige Accents
     gold: '0 10px 30px rgba(212, 165, 116, 0.25)',
     goldHover: '0 20px 40px rgba(212, 165, 116, 0.35)',
-    premium: '0 25px 50px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(212, 165, 116, 0.15)'
+    premium: '0 25px 50px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(212, 165, 116, 0.15)',
+    glass: '0 8px 32px 0 rgba(31, 38, 135, 0.07)'
   },
   
   // Border Radius System
@@ -182,6 +185,22 @@ export const theme: Theme = {
     skipLink: 1600,
     toast: 1700,
     tooltip: 1800
+  },
+  
+  // Glassmorphism Utilities
+  glass: {
+    clear: `
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    `,
+    frost: `
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    `
   }
 };
 

@@ -289,8 +289,8 @@ export const Grid = styled.div<GridProps>`
 `;
 
 interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'base' | 'lg';
+  $variant?: 'primary' | 'secondary' | 'ghost' | 'outline';
+  $size?: 'sm' | 'base' | 'lg';
 }
 
 export const Button = styled.button<ButtonProps>`
@@ -298,15 +298,15 @@ export const Button = styled.button<ButtonProps>`
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing[2]};
-  padding: ${({ size, theme }) => {
-    switch (size) {
+  padding: ${({ $size, theme }) => {
+    switch ($size) {
       case 'sm': return `${theme.spacing[2]} ${theme.spacing[4]}`;
       case 'lg': return `${theme.spacing[4]} ${theme.spacing[8]}`;
       default: return `${theme.spacing[3]} ${theme.spacing[6]}`;
     }
   }};
-  font-size: ${({ size, theme }) => {
-    switch (size) {
+  font-size: ${({ $size, theme }) => {
+    switch ($size) {
       case 'sm': return theme.typography.sizes.sm;
       case 'lg': return theme.typography.sizes.lg;
       default: return theme.typography.sizes.base;
@@ -322,8 +322,8 @@ export const Button = styled.button<ButtonProps>`
   position: relative;
   overflow: hidden;
   
-  ${({ variant, theme }) => {
-    switch (variant) {
+  ${({ $variant, theme }) => {
+    switch ($variant) {
       case 'primary':
         return `
           background: ${theme.colors.gradients.gold};
@@ -363,6 +363,17 @@ export const Button = styled.button<ButtonProps>`
             color: ${theme.colors.primary.black};
           }
         `;
+      case 'outline':
+        return `
+          background: transparent;
+          color: ${theme.colors.primary.white};
+          border: 1px solid ${theme.colors.primary.white};
+          
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+          }
+        `;
       default:
         return `
           background: ${theme.colors.gradients.gold};
@@ -380,7 +391,7 @@ export const Button = styled.button<ButtonProps>`
 `;
 
 interface CardProps {
-  featured?: boolean;
+  $featured?: boolean;
 }
 
 export const Card = styled.div<CardProps>`
@@ -397,7 +408,7 @@ export const Card = styled.div<CardProps>`
     border-color: ${({ theme }) => theme.colors.gold.champagne};
   }
   
-  ${({ featured, theme }) => featured && `
+  ${({ $featured, theme }) => $featured && `
     border: 2px solid ${theme.colors.gold.primary};
     box-shadow: ${theme.shadows.gold};
     

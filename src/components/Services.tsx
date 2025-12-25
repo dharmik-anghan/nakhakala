@@ -127,8 +127,8 @@ const PopularBadge = styled(motion.div)`
   }
 `;
 
-const ServiceImageHeader = styled.div<{ hasImage?: boolean }>`
-  ${({ hasImage }) => hasImage ? `
+const ServiceImageHeader = styled.div<{ $hasImage?: boolean }>`
+  ${({ $hasImage }) => $hasImage ? `
     width: 100%;
     height: 240px;
     background-size: cover;
@@ -149,20 +149,20 @@ const ServiceImageHeader = styled.div<{ hasImage?: boolean }>`
   ` : ''}
 `;
 
-const ServiceHeader = styled.div<{ hasImage?: boolean }>`
-  padding: ${({ theme, hasImage }) => hasImage ? 
-    `${theme.spacing[6]} ${theme.spacing[8]} ${theme.spacing[6]}` : 
+const ServiceHeader = styled.div<{ $hasImage?: boolean }>`
+  padding: ${({ theme, $hasImage }) => $hasImage ?
+    `${theme.spacing[6]} ${theme.spacing[8]} ${theme.spacing[6]}` :
     `${theme.spacing[8]} ${theme.spacing[8]} ${theme.spacing[6]}`
   };
   text-align: center;
   border-bottom: 1px solid ${({ theme }) => theme.colors.neutrals[100]};
 `;
 
-const ServiceIcon = styled(motion.div)<{ hasImage?: boolean }>`
+const ServiceIcon = styled(motion.div) <{ $hasImage?: boolean }>`
   font-size: ${({ theme }) => theme.typography.sizes['4xl']};
   margin-bottom: ${({ theme }) => theme.spacing[4]};
   height: 80px;
-  display: ${({ hasImage }) => hasImage ? 'none' : 'flex'};
+  display: ${({ $hasImage }) => $hasImage ? 'none' : 'flex'};
   align-items: center;
   justify-content: center;
   background: ${({ theme }) => theme.colors.gradients.soft};
@@ -422,7 +422,7 @@ interface Service {
 
 const Services: React.FC = () => {
   const { ref, inView } = useScrollAnimation();
-  
+
   const services: Service[] = [
     {
       icon: '💅',
@@ -610,7 +610,7 @@ const Services: React.FC = () => {
             💅 Service Menu
           </SectionTitle>
           <SectionSubtitle variants={itemVariants}>
-            Professional nail services with transparent pricing. From gel polish to extensions, 
+            Professional nail services with transparent pricing. From gel polish to extensions,
             we offer premium quality treatments for every nail need.
           </SectionSubtitle>
         </SectionHeader>
@@ -637,13 +637,13 @@ const Services: React.FC = () => {
                 </PopularBadge>
               )}
               {service.image && (
-                <ServiceImageHeader 
-                  hasImage={true}
+                <ServiceImageHeader
+                  $hasImage={true}
                   style={{ backgroundImage: `url(${service.image})` }}
                 />
               )}
-              <ServiceHeader hasImage={!!service.image}>
-                <ServiceIcon hasImage={!!service.image} variants={itemVariants}>
+              <ServiceHeader $hasImage={!!service.image}>
+                <ServiceIcon $hasImage={!!service.image} variants={itemVariants}>
                   {service.icon}
                 </ServiceIcon>
                 <ServiceTitle variants={itemVariants}>

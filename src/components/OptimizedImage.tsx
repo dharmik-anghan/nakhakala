@@ -14,7 +14,7 @@ interface OptimizedImageProps {
   onError?: () => void;
 }
 
-const ImageContainer = styled(motion.div)<{ $isLoading: boolean }>`
+const ImageContainer = styled(motion.div) <{ $isLoading: boolean }>`
   position: relative;
   overflow: hidden;
   background: ${({ theme }) => theme.colors.neutrals[100]};
@@ -131,7 +131,6 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
             alt={alt}
             loading={loading}
             decoding="async"
-            fetchPriority={priority ? 'high' : 'auto'}
             onLoad={handleLoad}
             onError={handleError}
             $loaded={loaded}
@@ -143,7 +142,6 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
           alt={alt}
           loading={loading}
           decoding="async"
-          fetchPriority={priority ? 'high' : 'auto'}
           onLoad={handleLoad}
           onError={handleError}
           $loaded={loaded}

@@ -274,7 +274,7 @@ const Gallery: React.FC = () => {
     const script = document.createElement('script');
     script.async = true;
     script.src = '//www.instagram.com/embed.js';
-    
+
     // Set timeout to show local gallery if Instagram doesn't load
     const fallbackTimer = setTimeout(() => {
       if (!instagramLoaded) {
@@ -286,7 +286,7 @@ const Gallery: React.FC = () => {
     script.onload = () => {
       setInstagramLoaded(true);
       clearTimeout(fallbackTimer);
-      
+
       // Process any Instagram embeds
       if (window.instgrm && window.instgrm.Embeds) {
         window.instgrm.Embeds.process();
@@ -349,7 +349,7 @@ const Gallery: React.FC = () => {
           <SectionHeader variants={itemVariants}>
             <SectionTitle>💎 Latest Nail Art Showcase</SectionTitle>
             <SectionSubtitle>
-              Discover our stunning nail art portfolio and get inspired by our latest creations. 
+              Discover our stunning nail art portfolio and get inspired by our latest creations.
               Follow @nakhakala on Instagram for daily nail inspiration and behind-the-scenes content.
             </SectionSubtitle>
           </SectionHeader>
@@ -364,7 +364,7 @@ const Gallery: React.FC = () => {
                   Check out our stunning nail art creations below, or visit our Instagram for more!
                 </p>
               </FallbackMessage>
-              
+
               <LocalGallery
                 variants={containerVariants}
                 initial="hidden"
@@ -391,7 +391,7 @@ const Gallery: React.FC = () => {
                   </GalleryImageContainer>
                 ))}
               </LocalGallery>
-              
+
               <FollowButton
                 href="https://instagram.com/nakhakala"
                 target="_blank"
@@ -415,9 +415,9 @@ const Gallery: React.FC = () => {
               <InstagramIcon variants={itemVariants}>
                 📸
               </InstagramIcon>
-              
+
               {/* Enhanced Instagram Profile Embed */}
-              <div style={{ 
+              <div style={{
                 background: '#fff',
                 borderRadius: '12px',
                 overflow: 'hidden',
@@ -438,7 +438,7 @@ const Gallery: React.FC = () => {
                   title="Nakhakala Instagram Feed"
                 />
               </div>
-              
+
 
               <FollowButton
                 href="https://instagram.com/nakhakala"

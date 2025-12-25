@@ -4,22 +4,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigation } from '../hooks/useNavigation';
 import { NavItem } from '../types';
 
-const NavigationContainer = styled(motion.nav)<{ scrolled: boolean }>`
+const NavigationContainer = styled(motion.nav) <{ $scrolled: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: ${({ theme }) => theme.zIndex.sticky};
-  background: ${({ scrolled, theme }) => 
-    scrolled 
-      ? 'rgba(255, 255, 255, 0.98)' 
+  background: ${({ $scrolled, theme }) =>
+    $scrolled
+      ? 'rgba(255, 255, 255, 0.98)'
       : 'rgba(255, 255, 255, 0.95)'
   };
   backdrop-filter: blur(20px);
   border-bottom: 1px solid ${({ theme }) => theme.colors.neutrals[200]};
   transition: all ${({ theme }) => theme.transitions.smooth};
-  box-shadow: ${({ scrolled, theme }) => 
-    scrolled ? theme.shadows.lg : 'none'
+  box-shadow: ${({ $scrolled, theme }) =>
+    $scrolled ? theme.shadows.lg : 'none'
   };
 `;
 
@@ -99,14 +99,14 @@ const NavItemContainer = styled.li`
   position: relative;
 `;
 
-const NavLink = styled(motion.button)<{ active: boolean }>`
+const NavLink = styled(motion.button) <{ $active: boolean }>`
   background: none;
   border: none;
   padding: ${({ theme }) => theme.spacing[2]} 0;
   font-size: ${({ theme }) => theme.typography.sizes.base};
   font-weight: ${({ theme }) => theme.typography.weights.medium};
-  color: ${({ active, theme }) => 
-    active ? theme.colors.gold.primary : theme.colors.primary.black
+  color: ${({ $active, theme }) =>
+    $active ? theme.colors.gold.primary : theme.colors.primary.black
   };
   cursor: pointer;
   position: relative;
@@ -117,7 +117,7 @@ const NavLink = styled(motion.button)<{ active: boolean }>`
     position: absolute;
     bottom: -2px;
     left: 0;
-    width: ${({ active }) => active ? '100%' : '0%'};
+    width: ${({ $active }) => $active ? '100%' : '0%'};
     height: 2px;
     background: ${({ theme }) => theme.colors.gold.primary};
     transition: width ${({ theme }) => theme.transitions.base};
@@ -207,12 +207,12 @@ const menuVariants = {
 } as const;
 
 const itemVariants = {
-  closed: { 
-    opacity: 0, 
+  closed: {
+    opacity: 0,
     y: -10
   },
-  open: { 
-    opacity: 1, 
+  open: {
+    opacity: 1,
     y: 0
   }
 } as const;
@@ -253,7 +253,7 @@ const Navigation: React.FC = () => {
 
   return (
     <NavigationContainer
-      scrolled={scrolled}
+      $scrolled={scrolled}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -289,7 +289,7 @@ const Navigation: React.FC = () => {
           {navItems.map((item, index) => (
             <NavItemContainer key={`desktop-${item.id}`} role="none">
               <NavLink
-                active={activeSection === item.id}
+                $active={activeSection === item.id}
                 onClick={() => scrollToSection(item.id)}
                 whileHover={{ y: -2 }}
                 whileTap={{ y: 0 }}
@@ -343,7 +343,7 @@ const Navigation: React.FC = () => {
               <NavItemContainer key={item.id} role="none">
                 <NavLink
                   variants={itemVariants}
-                  active={activeSection === item.id}
+                  $active={activeSection === item.id}
                   onClick={() => scrollToSection(item.id)}
                   transition={{
                     duration: 0.3,

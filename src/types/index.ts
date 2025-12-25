@@ -1,5 +1,7 @@
 // Type definitions for Nakhakala project
 
+// Type definitions for Nakhakala project
+
 export interface Theme {
   colors: {
     primary: {
@@ -37,7 +39,13 @@ export interface Theme {
       soft: string;
       hero: string;
       premium: string;
+      glass: string;
+      glassDark: string;
     };
+  };
+  glass: {
+    clear: string;
+    frost: string;
   };
   typography: {
     fonts: {
@@ -66,6 +74,7 @@ export interface Theme {
       medium: number;
       semibold: number;
       bold: number;
+
     };
     lineHeights: {
       tight: number;
@@ -137,9 +146,4 @@ export interface AnimationOptions {
   rootMargin?: string;
   triggerOnce?: boolean;
   delay?: number;
-}
-
-// Styled components theme extension
-declare module 'styled-components' {
-  export interface DefaultTheme extends Theme {}
 }
